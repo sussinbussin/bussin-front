@@ -7,11 +7,11 @@ const TopBar = () => {
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={{ paddingTop: insets.top, paddingBottom: 10 }}>
+    <Box style={{ paddingTop: insets.top, paddingBottom: 10 }}>
       <Center>
         <Heading>Bussin.</Heading>
       </Center>
-    </View>
+    </Box>
   );
 };
 
