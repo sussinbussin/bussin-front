@@ -12,7 +12,7 @@ import {
 
 const Login = ({ navigation }) => {
   const submit = () => {
-    console.log("Submit");
+    navigation.navigate("Home");
   };
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
