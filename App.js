@@ -6,7 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View } from "react-native";
 
 import Login from "./views/Login";
-
+import TopBar from "./components/TopBar";
 const Stack = createNativeStackNavigator();
 
 const Home = () => {
@@ -20,6 +20,7 @@ const App = () => {
   return (
     <NativeBaseProvider>
       <NavigationContainer>
+        <TopBar></TopBar>
         <Stack.Navigator
           screenOptions={{
             headerShown: false,
