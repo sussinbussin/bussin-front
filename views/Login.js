@@ -9,6 +9,7 @@ import {
   Center,
   View,
 } from "native-base";
+import TopBar from "../components/TopBar";
 
 const Login = ({ navigation }) => {
   const submit = () => {
@@ -16,11 +17,15 @@ const Login = ({ navigation }) => {
   };
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
+      <TopBar></TopBar>
+      <Heading size="xl" style={{ paddingTop: 30 }}>
+        Welcome
+      </Heading>
       <Box
         w="100%"
-        maxWidth="300px"
+        maxWidth="500px"
         style={{
-          marginTop: 30,
+          marginTop: 20,
           padding: 10,
         }}
         variant="light"
@@ -37,7 +42,7 @@ const Login = ({ navigation }) => {
               onPress={submit}
               w="100%"
               style={{ marginTop: 30 }}
-              variant="outlined"
+              variant="outline"
             >
               Sign In
             </Button>

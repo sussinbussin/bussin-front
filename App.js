@@ -5,25 +5,12 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { useColorScheme } from "react-native";
 
+/** Component imports <3 */
 import Login from "./views/Login";
 import TopBar from "./components/TopBar";
+import Home from "./views/Home";
 
 const Stack = createNativeStackNavigator();
-
-const Home = () => {
-  const colorScheme = useColorScheme();
-  return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <Text>{colorScheme}</Text>
-    </View>
-  );
-};
 
 const darkModeTheme = {
   colors: {
@@ -43,7 +30,7 @@ const darkModeTheme = {
   components: {
     Box: {
       baseStyle: {
-        bg: "#1e1e1e",
+        bg: "black",
       },
     },
     Text: {
@@ -53,13 +40,22 @@ const darkModeTheme = {
     },
     View: {
       defaultProps: {
-        bg: "#1e1e1e",
+        bg: "black",
       },
     },
     Heading: {
       baseStyle: {
         color: "muted.50",
       },
+    },
+    Button: {
+      variants: {
+        outline: {
+          _text: "white",
+          borderColor: "muted.500",
+        },
+      },
+      baseStyle: {},
     },
   },
 };
@@ -69,7 +65,6 @@ const App = () => {
   return (
     <NativeBaseProvider theme={theme}>
       <NavigationContainer>
-        <TopBar></TopBar>
         <Stack.Navigator
           screenOptions={{
             headerShown: false,
