@@ -6,7 +6,7 @@ const Home = () => {
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
       <Box style={{ paddingTop: insets.top }}>
-        <Heading>Helo</Heading>
+        <Heading>Hello</Heading>
       </Box>
     </View>
   );
