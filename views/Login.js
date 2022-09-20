@@ -9,9 +9,13 @@ import {
   Center,
   View,
 } from "native-base";
+import { useContext } from "react";
+import { FlagContext } from "../flags";
 import TopBar from "../components/TopBar";
 
 const Login = ({ navigation }) => {
+  const flag = useContext(FlagContext);
+  if (!flag.login) return null;
   const submit = () => {
     navigation.navigate("Home");
   };
