@@ -16,6 +16,7 @@ import TopBar from "../components/TopBar";
 const Login = ({ navigation }) => {
   const flag = useContext(FlagContext);
   if (!flag.login) return null;
+
   const submit = () => {
     navigation.navigate("Home");
   };
