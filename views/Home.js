@@ -8,8 +8,10 @@ const Home = () => {
   const insets = useSafeAreaInsets();
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
-      <Box style={{ paddingTop: insets.top }}>
-        <Heading>Hello</Heading>
+      <Box style={{ paddingTop: insets.top + 15 }}>
+        <HStack space={2}>
+          <Heading>Where to, Jolene?</Heading>
+        </HStack>
       </Box>
     </View>
   );
