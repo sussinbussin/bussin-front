@@ -5,5 +5,7 @@ import { createContext } from "react";
 export const flags = {
   login: true,
   home: true,
+  register: true,
+  registerName: true,
 };
 export const FlagContext = createContext(flags);

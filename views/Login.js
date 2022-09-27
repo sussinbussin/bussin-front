@@ -74,6 +74,29 @@ const Login = ({ navigation }) => {
           </Center>
         </Stack>
       </Box>
+
+      <View>
+        <Center>
+          <Text
+            style = {{ marginTop: 9 }}
+            fontSize="15">
+            No account yet?
+          </Text>
+            <Text
+              onPress={() => {
+                navigation.navigate("Register");
+              }}
+              textAlign='center'
+              paddingTop="7.5"
+              w="100%"
+              fontSize="16"
+              fontWeight="bold"
+            >
+              Sign up here!
+            </Text>
+        </Center>    
+      </View>
+
     </View>
   );
 };
