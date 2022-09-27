@@ -43,6 +43,11 @@ const darkModeTheme = {
       },
       baseStyle: {},
     },
+    Input: {
+      baseStyle: {
+        color: "white",
+      },
+    },
   },
 };
 

@@ -9,16 +9,29 @@ import {
   Center,
   View,
 } from "native-base";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { FlagContext } from "../flags";
 import TopBar from "../components/TopBar";
 
 const Login = ({ navigation }) => {
+  //used for feature toggling
   const flag = useContext(FlagContext);
   if (!flag.login) return null;
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handlePassword = (value) => setPassword(value);
+  const handleUsername = (value) => setUsername(value);
+
   const submit = () => {
+    if (username == "" || password == "") {
+      //TODO: handle invalid input
+    }
+    console.log(username, password);
     navigation.navigate("Home");
   };
+
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
       <TopBar></TopBar>
@@ -35,13 +48,21 @@ const Login = ({ navigation }) => {
         variant="light"
       >
         <Stack mx="10">
-          <Center>
+          <Center style={{ paddingTop: 30 }}>
             <FormControl.Label style={{ alignItems: "center" }}>
               Username
             </FormControl.Label>
-            <Input type="Text" placeholder="Username" />
+            <Input
+              type="Text"
+              placeholder="Username"
+              onChangeText={handleUsername}
+            />
             <FormControl.Label>Password</FormControl.Label>
-            <Input type="password" placeholder="Password" />
+            <Input
+              type="password"
+              placeholder="Password"
+              onChangeText={handlePassword}
+            />
             <Button
               onPress={submit}
               w="100%"

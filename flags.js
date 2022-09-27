@@ -4,6 +4,6 @@ import { createContext } from "react";
  */
 export const flags = {
   login: true,
-  home: false,
+  home: true,
 };
 export const FlagContext = createContext(flags);
