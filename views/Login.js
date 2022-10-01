@@ -28,7 +28,6 @@ const Login = ({ navigation }) => {
     if (username == "" || password == "") {
       //TODO: handle invalid input
     }
-    console.log(username, password);
     navigation.navigate("Home");
   };
 
@@ -53,7 +52,7 @@ const Login = ({ navigation }) => {
               Username
             </FormControl.Label>
             <Input
-              type="Text"
+              type="text"
               placeholder="Username"
               onChangeText={handleUsername}
             />
@@ -77,26 +76,23 @@ const Login = ({ navigation }) => {
 
       <View>
         <Center>
-          <Text
-            style = {{ marginTop: 9 }}
-            fontSize="15">
+          <Text style={{ marginTop: 9 }} fontSize="15">
             No account yet?
           </Text>
-            <Text
-              onPress={() => {
-                navigation.navigate("Register");
-              }}
-              textAlign='center'
-              paddingTop="7.5"
-              w="100%"
-              fontSize="16"
-              fontWeight="bold"
-            >
-              Sign up here!
-            </Text>
-        </Center>    
+          <Text
+            onPress={() => {
+              navigation.navigate("Register");
+            }}
+            textAlign="center"
+            paddingTop="7.5"
+            w="100%"
+            fontSize="16"
+            fontWeight="bold"
+          >
+            Sign up here!
+          </Text>
+        </Center>
       </View>
-
     </View>
   );
 };
