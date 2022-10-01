@@ -1,4 +1,15 @@
-import { Heading, View, Box, HStack, Center, Input } from "native-base";
+import {
+  Heading,
+  View,
+  Box,
+  HStack,
+  Center,
+  Input,
+  IconButton,
+  Flex,
+  VStack,
+  Spacer,
+} from "native-base";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useContext, useEffect, useState } from "react";
 import { StyleSheet, Dimensions } from "react-native";
@@ -9,6 +20,7 @@ import { PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
 import { mapStyle } from "../theming/mapStyle";
 import LocationSearch from "../components/LocationSearch";
+import HomeTopBar from "../components/HomeTopBar";
 
 const Home = () => {
   const flag = useContext(FlagContext);
@@ -29,7 +41,6 @@ const Home = () => {
         enableHighAccuracy: true,
         timeInterval: 5,
       });
-      console.log(location);
       setLocation(location.coords);
     })();
   }, []);
@@ -40,6 +51,7 @@ const Home = () => {
         flex: 1,
         flexDirection: "column",
         alignItems: "center",
+        backgroundColor: 0,
       }}
     >
       {location != null ? (
@@ -60,9 +72,7 @@ const Home = () => {
           }}
         ></MapView>
       ) : null}
-      <Heading style={{ marginTop: insets.top + 15, marginBottom: 30 }}>
-        Bussin
-      </Heading>
+      <HomeTopBar />
       <LocationSearch style={styles.search} />
     </View>
   );

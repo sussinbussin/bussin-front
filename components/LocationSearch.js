@@ -1,5 +1,14 @@
-import { Heading, View, Box, Input, VStack, FlatList, Text } from "native-base";
-import { useEffect, useState, useCallback } from "react";
+import {
+  Heading,
+  View,
+  Box,
+  Input,
+  VStack,
+  FlatList,
+  Text,
+  Pressable,
+} from "native-base";
+import { useEffect, useState, useCallback, useReducer } from "react";
 import { StyleSheet, Keyboard } from "react-native";
 import { usePlacesAPI } from "../api/PlacesAPI.js";
 
@@ -17,12 +26,25 @@ const useDebounce = (value, delay) => {
   return debouncedValue;
 };
 
+const initialState = {
+  status: "dest",
+};
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "DEST_SET":
+      return { ...state, status: "curr" };
+    default:
+      return state;
+  }
+};
 const LocationSearch = () => {
+  const [searchState, dispatch] = useReducer(reducer, initialState);
   const [keyboardStatus, setKeyboardStatus] = useState(false);
-  const [startingLocation, setStartingLocation] = useState("");
+  const [search, setSearch] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-  const { findPlaces } = usePlacesAPI(startingLocation);
-  const debouncedLocation = useDebounce(startingLocation, 1000);
+  const [destination, setDestination] = useState();
+  const { findPlaces } = usePlacesAPI(search);
+  const debouncedLocation = useDebounce(search, 300);
 
   useEffect(() => {
     const keyShowSubscription = Keyboard.addListener("keyboardWillShow", () => {
@@ -48,7 +70,13 @@ const LocationSearch = () => {
   }, [debouncedLocation]);
 
   const handleStartingLocation = (event) => {
-    setStartingLocation(event);
+    setSearch(event);
+  };
+
+  //Start destination is set
+  const handleStartDestination = () => {
+    //dispatch({ type: "DEST_SET" });
+    setDestination();
   };
 
   const generateSuggestions = () => {
@@ -57,23 +85,39 @@ const LocationSearch = () => {
       <FlatList
         data={suggestions}
         renderItem={({ item }) => (
-          <Box borderBottomWidth="1" borderColor="muted.600">
-            <Text fontSize="md">{item.structured_formatting.main_text}</Text>
-            <Text fontSize="sm">
-              {item.structured_formatting.secondary_text}
-            </Text>
-          </Box>
+          <Pressable onPress={handleStartDestination}>
+            {({ isPressed }) => {
+              return (
+                <Box
+                  borderBottomWidth="1"
+                  borderColor="muted.600"
+                  style={{
+                    transform: [{ scale: isPressed ? 0.96 : 1 }],
+                  }}
+                >
+                  <Text fontSize="md">
+                    {item.structured_formatting.main_text}
+                  </Text>
+                  <Text fontSize="sm">
+                    {item.structured_formatting.secondary_text}
+                  </Text>
+                </Box>
+              );
+            }}
+          </Pressable>
         )}
       />
     );
   };
+
   return (
     <Box style={{ ...styles.map, marginTop: keyboardStatus ? 0 : "auto" }}>
       <Input
-        placeholder="Where to?"
+        placeholder="Where to, Jolene?"
         style={styles.input}
         variant="underlined"
         size="lg"
+        value={search}
         onChangeText={handleStartingLocation}
       />
       {generateSuggestions()}
