@@ -4,11 +4,13 @@ import { StyleSheet, Keyboard } from "react-native";
 
 const LocationSearch = () => {
   const [keyboardStatus, setKeyboardStatus] = useState(false);
+  const [startingLocation, setStartingLocation] = useState("");
+
   useEffect(() => {
-    const keyShowSubscription = Keyboard.addListener("keyboardDidShow", () => {
+    const keyShowSubscription = Keyboard.addListener("keyboardWillShow", () => {
       setKeyboardStatus(true);
     });
-    const keyHideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+    const keyHideSubscription = Keyboard.addListener("keyboardWillHide", () => {
       setKeyboardStatus(false);
     });
 
@@ -18,6 +20,9 @@ const LocationSearch = () => {
     };
   }, []);
 
+  const handleStartingLocation = (event) => {
+    setStartingLocation(event);
+  };
   return (
     <Box style={{ ...styles.map, marginTop: keyboardStatus ? 0 : "auto" }}>
       <Input
@@ -25,6 +30,7 @@ const LocationSearch = () => {
         style={styles.input}
         variant="underlined"
         size="lg"
+        onChange={handleStartingLocation}
       />
     </Box>
   );
