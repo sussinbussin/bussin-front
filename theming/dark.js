@@ -48,6 +48,15 @@ const darkModeTheme = {
         color: "white",
       },
     },
+    IconButton: {
+      variants: {
+        ghost: {
+          _icon: {
+            _color: "white",
+          },
+        },
+      },
+    },
   },
 };
 
