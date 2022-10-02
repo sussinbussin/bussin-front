@@ -5,6 +5,7 @@ const flags = {
   home: true,
   register: true,
   registerName: true,
+  profile: true,
 };
 
 const initialState = {
