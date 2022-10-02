@@ -55,12 +55,16 @@ const Login = ({ navigation }) => {
               type="text"
               placeholder="Username"
               onChangeText={handleUsername}
+              variant="underlined"
+              size="lg"
             />
             <FormControl.Label>Password</FormControl.Label>
             <Input
               type="password"
               placeholder="Password"
               onChangeText={handlePassword}
+              variant="underlined"
+              size="lg"
             />
             <Button
               onPress={submit}

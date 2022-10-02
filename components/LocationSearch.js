@@ -8,9 +8,10 @@ import {
   Text,
   Pressable,
 } from "native-base";
-import { useEffect, useState, useCallback, useReducer } from "react";
+import { useEffect, useState, useContext } from "react";
 import { StyleSheet, Keyboard } from "react-native";
 import { usePlacesAPI } from "../api/PlacesAPI.js";
+import { GlobalContext } from "../contexts/global.js";
 
 const useDebounce = (value, delay) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -26,19 +27,8 @@ const useDebounce = (value, delay) => {
   return debouncedValue;
 };
 
-const initialState = {
-  status: "dest",
-};
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "DEST_SET":
-      return { ...state, status: "curr" };
-    default:
-      return state;
-  }
-};
 const LocationSearch = () => {
-  const [searchState, dispatch] = useReducer(reducer, initialState);
+  const { state, dispatch } = useContext(GlobalContext);
   const [keyboardStatus, setKeyboardStatus] = useState(false);
   const [search, setSearch] = useState("");
   const [suggestions, setSuggestions] = useState([]);
@@ -74,10 +64,12 @@ const LocationSearch = () => {
   };
 
   //Start destination is set
-  const handleStartDestination = () => {
-    //dispatch({ type: "DEST_SET" });
+  const handleStartDestination = (item) => {
+    dispatch({ type: "PICKUP" });
     Keyboard.dismiss();
-    setDestination(search);
+    setDestination(item);
+    //setSearch(item.structured_formatting.main_text);
+    console.log(destination);
     setSuggestions("");
   };
 
@@ -87,7 +79,7 @@ const LocationSearch = () => {
       <FlatList
         data={suggestions}
         renderItem={({ item }) => (
-          <Pressable onPress={handleStartDestination}>
+          <Pressable onPress={() => handleStartDestination(item)}>
             {({ isPressed }) => {
               return (
                 <Box
