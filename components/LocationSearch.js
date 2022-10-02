@@ -76,7 +76,9 @@ const LocationSearch = () => {
   //Start destination is set
   const handleStartDestination = () => {
     //dispatch({ type: "DEST_SET" });
-    setDestination();
+    Keyboard.dismiss();
+    setDestination(search);
+    setSuggestions("");
   };
 
   const generateSuggestions = () => {

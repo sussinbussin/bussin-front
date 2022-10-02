@@ -1,9 +1,9 @@
 import { Heading, View, Box, HStack, Center } from "native-base";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useContext } from "react";
-import { FlagContext } from "../flags";
+import { FlagContext } from "../contexts/flags";
 const RegisterName = () => {
-    // for stuff like username, email, name, dob etc.
+  // for stuff like username, email, name, dob etc.
 
   const flag = useContext(FlagContext);
   if (!flag.registerName) return null;
