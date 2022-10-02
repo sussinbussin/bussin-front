@@ -22,7 +22,7 @@ import { mapStyle } from "../theming/mapStyle";
 import LocationSearch from "../components/LocationSearch";
 import HomeTopBar from "../components/HomeTopBar";
 
-const Home = () => {
+const Home = ({navigation}) => {
   const { state } = useContext(GlobalContext);
   if (!state.flags.home) return null;
   const insets = useSafeAreaInsets();
