@@ -65,11 +65,11 @@ const LocationSearch = () => {
 
   //Start destination is set
   const handleStartDestination = (item) => {
-    dispatch({ type: "PICKUP" });
+    console.log(item);
+    dispatch({ type: "PICKUP_STAGE", payload: item });
     Keyboard.dismiss();
-    setDestination(item);
-    //setSearch(item.structured_formatting.main_text);
-    console.log(destination);
+    //setDestination(item);
+    //search(item.structured_formatting.main_text);
     setSuggestions("");
   };
 

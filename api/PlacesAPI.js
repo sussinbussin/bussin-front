@@ -14,7 +14,22 @@ const usePlacesAPI = (query) => {
     const result = await res.json(); //todo: error checking
     return result;
   };
-  return { findPlaces };
+
+  const getGeometry = async () => {
+    const url = "https://maps.googleapis.com/maps/api/place/details/json?";
+    const res = await fetch(
+      url +
+        new URLSearchParams({
+          place_id: query,
+          key: GOOGLE_API_KEY,
+          fields: "geometry",
+        })
+    );
+
+    const result = await res.json();
+    return result.result.geometry;
+  };
+  return { findPlaces, getGeometry };
 };
 
 export { usePlacesAPI };

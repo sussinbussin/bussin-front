@@ -13,14 +13,26 @@ const initialState = {
     ...flags,
   },
   currentState: "CHOOSING_DESTINATION",
+  destination: "",
+  pickup: "",
 };
 const initState = () => initialState;
 const globalReducer = (state, action) => {
   switch (action.type) {
-    case "DESTINATION":
-      return { ...state, currentState: "CHOOSING_DESTINATION" };
-    case "PICKUP":
-      return { ...state, currentState: "CHOOSING_PICKUP" };
+    case "DESTINATION_STAGE":
+      return {
+        ...state,
+        currentState: "CHOOSING_DESTINATION",
+      };
+    /**
+     * Set stage to pickup and also save the desintation chosen
+     */
+    case "PICKUP_STAGE":
+      return {
+        ...state,
+        currentState: "CHOOSING_PICKUP",
+        destination: action.payload,
+      };
     default:
       return state;
   }

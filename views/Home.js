@@ -21,9 +21,10 @@ import * as Location from "expo-location";
 import { mapStyle } from "../theming/mapStyle";
 import LocationSearch from "../components/LocationSearch";
 import HomeTopBar from "../components/HomeTopBar";
+import PickupSearch from "../components/PickupSearch";
 
-const Home = ({navigation}) => {
-  const { state } = useContext(GlobalContext);
+const Home = ({ navigation }) => {
+  const { state, dispatch } = useContext(GlobalContext);
   if (!state.flags.home) return null;
   const insets = useSafeAreaInsets();
 
@@ -44,7 +45,11 @@ const Home = ({navigation}) => {
       setLocation(location.coords);
     })();
   }, []);
-
+  const bottomBar = () => {
+    if (state.currentState == "CHOOSING_DESTINATION")
+      return <LocationSearch style={styles.search} />;
+    if (state.currentState == "CHOOSING_PICKUP") return <PickupSearch />;
+  };
   return (
     <View
       style={{
@@ -73,7 +78,7 @@ const Home = ({navigation}) => {
         ></MapView>
       ) : null}
       <HomeTopBar />
-      <LocationSearch style={styles.search} />
+      {bottomBar()}
     </View>
   );
 };
