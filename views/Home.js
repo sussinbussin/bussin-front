@@ -9,9 +9,10 @@ import {
   Flex,
   VStack,
   Spacer,
+  Modal,
 } from "native-base";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { StyleSheet, Dimensions } from "react-native";
 import { GlobalContext } from "../contexts/global";
 import MapView from "react-native-maps";
@@ -29,6 +30,7 @@ const Home = ({ navigation }) => {
   const insets = useSafeAreaInsets();
 
   const [location, setLocation] = useState();
+  const map = useRef();
 
   useEffect(() => {
     (async () => {
@@ -45,11 +47,13 @@ const Home = ({ navigation }) => {
       setLocation(location.coords);
     })();
   }, []);
+
   const bottomBar = () => {
-    if (state.currentState == "CHOOSING_DESTINATION")
+    if (state.stage.display == "search")
       return <LocationSearch style={styles.search} />;
-    if (state.currentState == "CHOOSING_PICKUP") return <PickupSearch />;
+    if (state.stage.display == "pickup") return <PickupSearch />;
   };
+
   return (
     <View
       style={{
@@ -75,6 +79,7 @@ const Home = ({ navigation }) => {
             zoom: 15,
             altitude: location.altitude,
           }}
+          ref={map}
         ></MapView>
       ) : null}
       <HomeTopBar />

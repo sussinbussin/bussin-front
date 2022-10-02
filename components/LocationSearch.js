@@ -63,10 +63,43 @@ const LocationSearch = () => {
     setSearch(event);
   };
 
-  //Start destination is set
-  const handleStartDestination = (item) => {
+  const handleSetDestination = (item) => {
     console.log(item);
-    dispatch({ type: "PICKUP_STAGE", payload: item });
+    let payload = {};
+
+    /**
+     * if selecting destination, change level to choosing pickup
+     */
+    if (state.stage.level == "CHOOSING_DESTINATION") {
+      payload = {
+        level: "CHOOSING_PICKUP",
+        display: "pickup",
+        locationSearch: {
+          text: "Search for pickup point.",
+        },
+      };
+      dispatch({
+        type: "SET_DESTINATION",
+        payload: {
+          ...state.destination,
+          item: item,
+        },
+      });
+    }
+    if (state.stage.level == "CHOOSING_PICKUP") {
+      payload = {
+        display: "pickup",
+      };
+      dispatch({
+        type: "SET_PICKUP",
+        payload: {
+          ...state.pickup,
+          item: item,
+        },
+      });
+    }
+    console.log(state);
+    dispatch({ type: "MODIFY_STAGE", payload: payload });
     Keyboard.dismiss();
     //setDestination(item);
     //search(item.structured_formatting.main_text);
@@ -79,7 +112,7 @@ const LocationSearch = () => {
       <FlatList
         data={suggestions}
         renderItem={({ item }) => (
-          <Pressable onPress={() => handleStartDestination(item)}>
+          <Pressable onPress={() => handleSetDestination(item)}>
             {({ isPressed }) => {
               return (
                 <Box
@@ -107,7 +140,7 @@ const LocationSearch = () => {
   return (
     <Box style={{ ...styles.map, marginTop: keyboardStatus ? 0 : "auto" }}>
       <Input
-        placeholder="Where to, Jolene?"
+        placeholder={state.stage.locationSearch.text}
         style={styles.input}
         variant="underlined"
         size="lg"

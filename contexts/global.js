@@ -8,30 +8,61 @@ const flags = {
   profile: true,
 };
 
+/**
+ * levels:
+ * CHOOSING_DESTINATION
+ * CHOOSING_PICKUP
+ * CHOOSING_TIME
+ *
+ */
+
 const initialState = {
   flags: {
     ...flags,
   },
-  currentState: "CHOOSING_DESTINATION",
-  destination: "",
-  pickup: "",
+  //what to display on the screen
+  stage: {
+    level: "CHOOSING_DESTINATION",
+    display: "search",
+    locationSearch: {
+      text: "Where to?",
+    },
+  },
+  camera: {
+    lat: 0,
+    lng: 0,
+  },
+  destination: {
+    item: null,
+    geo: null,
+  },
+  pickup: {
+    item: null,
+    geo: null,
+  },
 };
 const initState = () => initialState;
 const globalReducer = (state, action) => {
   switch (action.type) {
-    case "DESTINATION_STAGE":
+    case "MODIFY_STAGE":
       return {
         ...state,
-        currentState: "CHOOSING_DESTINATION",
+        stage: { ...action.payload },
       };
-    /**
-     * Set stage to pickup and also save the desintation chosen
-     */
-    case "PICKUP_STAGE":
+    case "SET_DESTINATION":
       return {
         ...state,
-        currentState: "CHOOSING_PICKUP",
-        destination: action.payload,
+        destination: { ...action.payload },
+      };
+    case "SET_PICKUP":
+      return {
+        ...state,
+        pickup: { ...action.payload },
+      };
+    case "ADJUST_CAMERA":
+      return {
+        ...state,
+        camera: action.payload,
       };
     default:
       return state;
