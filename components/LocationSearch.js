@@ -63,8 +63,13 @@ const LocationSearch = () => {
     setSearch(event);
   };
 
-  const handleSetDestination = (item) => {
-    console.log(item);
+  const handleSetDestination = async (item) => {
+    console.log(item.place_id);
+    const { getGeometry } = usePlacesAPI(item.place_id);
+    let geog = await getGeometry();
+
+    //console.log(item);
+    console.log(geog);
     let payload = {};
 
     /**
@@ -83,6 +88,7 @@ const LocationSearch = () => {
         payload: {
           ...state.destination,
           item: item,
+          geo: geog,
         },
       });
     }
@@ -95,6 +101,7 @@ const LocationSearch = () => {
         payload: {
           ...state.pickup,
           item: item,
+          geo: geog,
         },
       });
     }

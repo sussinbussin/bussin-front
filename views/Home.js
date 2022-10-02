@@ -48,6 +48,19 @@ const Home = ({ navigation }) => {
     })();
   }, []);
 
+  useEffect(() => {
+    if (state.pickup.geo == null) return;
+
+    map.current.animateCamera(
+      {
+        center: {
+          latitude: state.pickup.geo.lat,
+          longitude: state.pickup.geo.lng,
+        },
+      },
+      { duration: 300 }
+    );
+  }, [state.pickup.geo]);
   const bottomBar = () => {
     if (state.stage.display == "search")
       return <LocationSearch style={styles.search} />;

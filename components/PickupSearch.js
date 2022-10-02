@@ -14,8 +14,6 @@ import { usePlacesAPI } from "../api/PlacesAPI";
 const PickupSearch = () => {
   const { state, dispatch } = useContext(GlobalContext);
   const [keyboardStatus, setKeyboardStatus] = useState(false);
-  const [geometry, setGeometry] = useState();
-  const { getGeometry } = usePlacesAPI(state.destination.item.place_id);
 
   useEffect(() => {
     const keyShowSubscription = Keyboard.addListener("keyboardWillShow", () => {
@@ -24,13 +22,6 @@ const PickupSearch = () => {
     const keyHideSubscription = Keyboard.addListener("keyboardWillHide", () => {
       setKeyboardStatus(false);
     });
-
-    const getDestination = async () => {
-      const results = await getGeometry();
-      setGeometry(results);
-      console.log(results.location);
-    };
-    getDestination();
     return () => {
       keyHideSubscription.remove();
       keyShowSubscription.remove();

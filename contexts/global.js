@@ -71,9 +71,3 @@ const globalReducer = (state, action) => {
 const GlobalContext = createContext(flags);
 
 export { GlobalContext, globalReducer, initialState, initState };
-
-/**
- *
- *
- *
- */
