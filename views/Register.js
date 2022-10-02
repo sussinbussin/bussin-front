@@ -12,12 +12,12 @@ import {
 } from "native-base";
 
 import { useContext, useState } from "react";
-import { FlagContext } from "../contexts/flags";
+import { GlobalContext } from "../contexts/global";
 import TopBar from "../components/TopBar";
 
 const Register = ({ navigation }) => {
-  const flag = useContext(FlagContext);
-  if (!flag.register) return null;
+  const { state } = useContext(GlobalContext);
+  if (!state.flags.register) return null;
 
   const [phoneNum, setPhoneInvalid] = useState({
     phoneNum: false,
