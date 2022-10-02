@@ -1,4 +1,4 @@
-import { flags, FlagContext } from "./flags";
+import { flags, FlagContext } from "./contexts/flags";
 import { StatusBar } from "expo-status-bar";
 import { NativeBaseProvider, Text, Box, extendTheme, View } from "native-base";
 import { NavigationContainer } from "@react-navigation/native";

@@ -10,7 +10,7 @@ import {
   View,
 } from "native-base";
 import { useContext, useState } from "react";
-import { FlagContext } from "../flags";
+import { FlagContext } from "../contexts/flags";
 import TopBar from "../components/TopBar";
 
 const Login = ({ navigation }) => {

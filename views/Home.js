@@ -13,7 +13,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useContext, useEffect, useState } from "react";
 import { StyleSheet, Dimensions } from "react-native";
-import { FlagContext } from "../flags";
+import { FlagContext } from "../contexts/flags";
 import MapView from "react-native-maps";
 import Marker from "react-native-maps";
 import { PROVIDER_GOOGLE } from "react-native-maps";
