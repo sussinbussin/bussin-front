@@ -9,9 +9,10 @@ import {
   Flex,
   VStack,
   Spacer,
+  Modal,
 } from "native-base";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { StyleSheet, Dimensions } from "react-native";
 import { GlobalContext } from "../contexts/global";
 import MapView from "react-native-maps";
@@ -21,13 +22,15 @@ import * as Location from "expo-location";
 import { mapStyle } from "../theming/mapStyle";
 import LocationSearch from "../components/LocationSearch";
 import HomeTopBar from "../components/HomeTopBar";
+import PickupSearch from "../components/PickupSearch";
 
-const Home = ({navigation}) => {
-  const { state } = useContext(GlobalContext);
+const Home = ({ navigation }) => {
+  const { state, dispatch } = useContext(GlobalContext);
   if (!state.flags.home) return null;
   const insets = useSafeAreaInsets();
 
   const [location, setLocation] = useState();
+  const map = useRef();
 
   useEffect(() => {
     (async () => {
@@ -44,6 +47,12 @@ const Home = ({navigation}) => {
       setLocation(location.coords);
     })();
   }, []);
+
+  const bottomBar = () => {
+    if (state.stage.display == "search")
+      return <LocationSearch style={styles.search} />;
+    if (state.stage.display == "pickup") return <PickupSearch />;
+  };
 
   return (
     <View
@@ -70,10 +79,11 @@ const Home = ({navigation}) => {
             zoom: 15,
             altitude: location.altitude,
           }}
+          ref={map}
         ></MapView>
       ) : null}
       <HomeTopBar />
-      <LocationSearch style={styles.search} />
+      {bottomBar()}
     </View>
   );
 };
