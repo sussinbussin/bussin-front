@@ -1,4 +1,9 @@
-import { flags, FlagContext } from "./contexts/flags";
+import {
+  GlobalContext,
+  globalReducer,
+  initialState,
+  initState,
+} from "./contexts/global";
 import { StatusBar } from "expo-status-bar";
 import { NativeBaseProvider, Text, Box, extendTheme, View } from "native-base";
 import { NavigationContainer } from "@react-navigation/native";
@@ -12,14 +17,15 @@ import TopBar from "./components/TopBar";
 import Home from "./views/Home";
 import Register from "./views/Register";
 import RegisterName from "./views/RegisterName";
+import { useReducer } from "react";
 
 const Stack = createNativeStackNavigator();
-
 const App = () => {
+  const [state, dispatch] = useReducer(globalReducer, initialState, initState);
   const colorScheme = useColorScheme();
   const theme = extendTheme(colorScheme === "dark" ? darkModeTheme : {});
   return (
-    <FlagContext.Provider value={flags}>
+    <GlobalContext.Provider value={{ state, dispatch }}>
       <NativeBaseProvider theme={theme}>
         <NavigationContainer>
           <Stack.Navigator
@@ -35,7 +41,7 @@ const App = () => {
         </NavigationContainer>
         <StatusBar></StatusBar>
       </NativeBaseProvider>
-    </FlagContext.Provider>
+    </GlobalContext.Provider>
   );
 };
 export default App;

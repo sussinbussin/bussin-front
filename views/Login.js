@@ -10,13 +10,13 @@ import {
   View,
 } from "native-base";
 import { useContext, useState } from "react";
-import { FlagContext } from "../contexts/flags";
+import { GlobalContext } from "../contexts/global";
 import TopBar from "../components/TopBar";
 
 const Login = ({ navigation }) => {
   //used for feature toggling
-  const flag = useContext(FlagContext);
-  if (!flag.login) return null;
+  const { state } = useContext(GlobalContext);
+  if (!state.flags.login) return null;
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
