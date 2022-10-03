@@ -63,8 +63,13 @@ const LocationSearch = () => {
     setSearch(event);
   };
 
-  const handleSetDestination = (item) => {
-    console.log(item);
+  const handleSetDestination = async (item) => {
+    const { getGeometry } = usePlacesAPI(item.place_id);
+    let geog = await getGeometry();
+    console.log(state.stage.level);
+    console.log(geog);
+
+    //console.log(item);
     let payload = {};
 
     /**
@@ -81,8 +86,9 @@ const LocationSearch = () => {
       dispatch({
         type: "SET_DESTINATION",
         payload: {
-          ...state.destination,
+          ...state.dest,
           item: item,
+          geo: geog,
         },
       });
     }
@@ -95,6 +101,7 @@ const LocationSearch = () => {
         payload: {
           ...state.pickup,
           item: item,
+          geo: geog,
         },
       });
     }

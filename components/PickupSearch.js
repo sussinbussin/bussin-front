@@ -10,12 +10,9 @@ import {
 import { useContext, useEffect, useState } from "react";
 import { StyleSheet, Keyboard } from "react-native";
 import { GlobalContext } from "../contexts/global";
-import { usePlacesAPI } from "../api/PlacesAPI";
 const PickupSearch = () => {
   const { state, dispatch } = useContext(GlobalContext);
   const [keyboardStatus, setKeyboardStatus] = useState(false);
-  const [geometry, setGeometry] = useState();
-  const { getGeometry } = usePlacesAPI(state.destination.item.place_id);
 
   useEffect(() => {
     const keyShowSubscription = Keyboard.addListener("keyboardWillShow", () => {
@@ -24,13 +21,6 @@ const PickupSearch = () => {
     const keyHideSubscription = Keyboard.addListener("keyboardWillHide", () => {
       setKeyboardStatus(false);
     });
-
-    const getDestination = async () => {
-      const results = await getGeometry();
-      setGeometry(results);
-      console.log(results.location);
-    };
-    getDestination();
     return () => {
       keyHideSubscription.remove();
       keyShowSubscription.remove();
@@ -72,9 +62,11 @@ const PickupSearch = () => {
           {({ isPressed }) => {
             return (
               <HStack style={{ transform: [{ scale: isPressed ? 0.96 : 1 }] }}>
-                <Text bold>From: </Text>
+                <Text fontSize="md" bold>
+                  From:{" "}
+                </Text>
                 {state.pickup.item ? (
-                  <Text isTruncated>
+                  <Text fontSize="md" isTruncated>
                     {state.pickup.item.structured_formatting.main_text}
                   </Text>
                 ) : (
@@ -89,9 +81,11 @@ const PickupSearch = () => {
           {({ isPressed }) => {
             return (
               <HStack style={{ transform: [{ scale: isPressed ? 0.96 : 1 }] }}>
-                <Text bold>To: </Text>
-                <Text isTruncated>
-                  {state.destination.item.structured_formatting.main_text}
+                <Text fontSize="md" bold>
+                  To:{" "}
+                </Text>
+                <Text fontSize="md" isTruncated>
+                  {state.dest.item.structured_formatting.main_text}
                 </Text>
               </HStack>
             );

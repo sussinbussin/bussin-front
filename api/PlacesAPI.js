@@ -27,7 +27,7 @@ const usePlacesAPI = (query) => {
     );
 
     const result = await res.json();
-    return result.result.geometry;
+    return result.result.geometry.location;
   };
   return { findPlaces, getGeometry };
 };

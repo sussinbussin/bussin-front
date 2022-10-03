@@ -32,7 +32,7 @@ const initialState = {
     lat: 0,
     lng: 0,
   },
-  destination: {
+  dest: {
     item: null,
     geo: null,
   },
@@ -52,7 +52,7 @@ const globalReducer = (state, action) => {
     case "SET_DESTINATION":
       return {
         ...state,
-        destination: { ...action.payload },
+        dest: { ...action.payload },
       };
     case "SET_PICKUP":
       return {
@@ -71,9 +71,3 @@ const globalReducer = (state, action) => {
 const GlobalContext = createContext(flags);
 
 export { GlobalContext, globalReducer, initialState, initState };
-
-/**
- *
- *
- *
- */
