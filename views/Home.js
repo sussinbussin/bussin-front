@@ -70,8 +70,6 @@ const Home = ({ navigation }) => {
 
   const generateDirections = () => {
     if (state.pickup.geo == null || state.dest.geo == null) return;
-
-    return (
       <MapViewDirections
         origin={{
           latitude: state.pickup.geo.lat,
@@ -119,6 +117,7 @@ const Home = ({ navigation }) => {
             zoom: 15,
             altitude: location.altitude,
           }}
+          loadingEnabled
           ref={map}
         >
           {generateDirections()}
