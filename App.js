@@ -34,13 +34,11 @@ const App = () => {
               headerShown: false,
             }}
           >
-
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Register" component={Register} />
             <Stack.Screen name="RegisterName" component={RegisterName} />
-            <Stack.Screen name ="Profile" component={Profile} />
-
+            <Stack.Screen name="Profile" component={Profile} />
           </Stack.Navigator>
         </NavigationContainer>
         <StatusBar></StatusBar>

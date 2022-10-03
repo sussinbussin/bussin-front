@@ -64,12 +64,12 @@ const LocationSearch = () => {
   };
 
   const handleSetDestination = async (item) => {
-    console.log(item.place_id);
     const { getGeometry } = usePlacesAPI(item.place_id);
     let geog = await getGeometry();
+    console.log(state.stage.level);
+    console.log(geog);
 
     //console.log(item);
-    console.log(geog);
     let payload = {};
 
     /**
@@ -86,7 +86,7 @@ const LocationSearch = () => {
       dispatch({
         type: "SET_DESTINATION",
         payload: {
-          ...state.destination,
+          ...state.dest,
           item: item,
           geo: geog,
         },

@@ -1,3 +1,4 @@
+import { GOOGLE_API_KEY } from "@env";
 import {
   Heading,
   View,
@@ -15,15 +16,14 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useContext, useEffect, useState, useRef } from "react";
 import { StyleSheet, Dimensions } from "react-native";
 import { GlobalContext } from "../contexts/global";
-import MapView from "react-native-maps";
-import Marker from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 import { PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
 import { mapStyle } from "../theming/mapStyle";
 import LocationSearch from "../components/LocationSearch";
 import HomeTopBar from "../components/HomeTopBar";
 import PickupSearch from "../components/PickupSearch";
-
+import MapViewDirections from "react-native-maps-directions";
 const Home = ({ navigation }) => {
   const { state, dispatch } = useContext(GlobalContext);
   if (!state.flags.home) return null;
@@ -47,7 +47,7 @@ const Home = ({ navigation }) => {
       setLocation(location.coords);
     })();
   }, []);
-
+  //move camera to pick up point
   useEffect(() => {
     if (state.pickup.geo == null) return;
 
@@ -61,10 +61,37 @@ const Home = ({ navigation }) => {
       { duration: 300 }
     );
   }, [state.pickup.geo]);
+
   const bottomBar = () => {
     if (state.stage.display == "search")
       return <LocationSearch style={styles.search} />;
     if (state.stage.display == "pickup") return <PickupSearch />;
+  };
+
+  const generateDirections = () => {
+    if (state.pickup.geo == null || state.dest.geo == null) return;
+
+    return (
+      <MapViewDirections
+        origin={{
+          latitude: state.pickup.geo.lat,
+          longitude: state.pickup.geo.lng,
+        }}
+        desintation={{
+          latitude: state.dest.geo.lat,
+          longitude: state.dest.geo.lng,
+        }}
+        strokeWidth={3}
+        strokeColor="white"
+        apikey={GOOGLE_API_KEY}
+        onStart={(params) => {
+          console.log("started");
+        }}
+        onError={(error) => {
+          console.error(error);
+        }}
+      />
+    );
   };
 
   return (
@@ -78,7 +105,7 @@ const Home = ({ navigation }) => {
     >
       {location != null ? (
         <MapView
-          style={styles.map}
+          style={StyleSheet.absoluteFill}
           provider={PROVIDER_GOOGLE}
           customMapStyle={mapStyle}
           showsUserLocation={true}
@@ -93,7 +120,27 @@ const Home = ({ navigation }) => {
             altitude: location.altitude,
           }}
           ref={map}
-        ></MapView>
+        >
+          {generateDirections()}
+          {state.dest.geo ? (
+            <Marker
+              coordinate={{
+                latitude: state.dest.geo.lat,
+                longitude: state.dest.geo.lng,
+              }}
+              pinColor={"white"}
+            ></Marker>
+          ) : null}
+          {state.pickup.geo ? (
+            <Marker
+              coordinate={{
+                latitude: state.pickup.geo.lat,
+                longitude: state.pickup.geo.lng,
+              }}
+              pinColor={"white"}
+            ></Marker>
+          ) : null}
+        </MapView>
       ) : null}
       <HomeTopBar />
       {bottomBar()}
@@ -106,7 +153,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height,
     position: "absolute",
-    zIndex: -99,
+    zIndex: -1,
   },
 });
 export default Home;
