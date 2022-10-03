@@ -82,11 +82,16 @@ const PickupSearch = () => {
           {({ isPressed }) => {
             return (
               <HStack style={{ transform: [{ scale: isPressed ? 0.96 : 1 }] }}>
-                <Text fontSize="md" bold>
+                <Text fontSize="md" bold style={styles.text}>
                   From:{" "}
                 </Text>
                 {state.pickup.item ? (
-                  <Text fontSize="md" isTruncated maxWidth="250">
+                  <Text
+                    fontSize="md"
+                    isTruncated
+                    maxWidth="250"
+                    style={styles.text}
+                  >
                     {state.pickup.item.structured_formatting.main_text}
                   </Text>
                 ) : (
@@ -101,10 +106,15 @@ const PickupSearch = () => {
           {({ isPressed }) => {
             return (
               <HStack style={{ transform: [{ scale: isPressed ? 0.96 : 1 }] }}>
-                <Text fontSize="md" bold>
+                <Text fontSize="md" bold style={styles.text}>
                   To:{" "}
                 </Text>
-                <Text fontSize="md" isTruncated maxWidth="300">
+                <Text
+                  fontSize="md"
+                  isTruncated
+                  maxWidth="300"
+                  style={styles.text}
+                >
                   {state.dest.item.structured_formatting.main_text}
                 </Text>
               </HStack>
@@ -113,6 +123,9 @@ const PickupSearch = () => {
         </Pressable>
 
         <Button
+          style={{
+            marginTop: 10,
+          }}
           _text={{
             fontSize: "md",
           }}
@@ -132,6 +145,10 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 90,
     borderRadius: 10,
+  },
+  text: {
+    paddingTop: 3,
+    paddingBottom: 3,
   },
 });
 export default PickupSearch;
