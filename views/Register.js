@@ -10,7 +10,7 @@ import {
   Center,
   View,
 } from "native-base";
-
+import { TextInput } from "react-native";
 import { useContext, useState } from "react";
 import { GlobalContext } from "../contexts/global";
 import TopBar from "../components/TopBar";
@@ -19,31 +19,25 @@ const Register = ({ navigation }) => {
   const { state } = useContext(GlobalContext);
   if (!state.flags.register) return null;
 
-  const [phoneNum, setPhoneInvalid] = useState({
-    phoneNum: false,
-    confirmPhone: false,
-  });
 
-  const handlePhone = (value) => setPhoneInvalid(value);
+  const [phoneNum, setPhoneNum] = useState("");
+  const handlePhoneNum = (value) => setPhoneNum(value);
 
   const submit = () => {
-    // TODO: handle invalid input
-    // prolly need to check starting numbers too
-    // need to convert phoneNum to int
-    const phoneIsValid = phoneNum.length === 8;
+    const phoneIsValid =
+      phoneNum.length === 8 &&
+      (phoneNum.toString().indexOf('8') === 0 || phoneNum.toString().indexOf('9') === 0);
 
     if (!phoneIsValid) {
-      //Alert.alert('rip invalid number');
-      console.log("bruh.");
-      setPhoneInvalid({
-        phoneNum: !phoneIsValid,
-        confirmPhone: !phoneIsValid,
+      setPhoneNum({
+        phoneNum: false,
       });
-      console.log(phoneNum);
-      return;
+      // TODO: alert invalid number
+    
     } else {
-      console.log(phoneNum);
-      navigation.navigate("Login");
+      navigation.navigate("RegisterName")
+      // TODO: send to db
+
     }
   };
 
@@ -71,14 +65,17 @@ const Register = ({ navigation }) => {
               type="Text"
               placeholder="Phone number"
               keyboardType="numeric"
-              onChangeText={handlePhone}
+              onChangeText={handlePhoneNum}
+              maxLength={8}
+              variant="underlined"
+              size="lg"
             />
 
             <Button
               onPress={() => {
                 submit();
                 // idk how to navigate only if successful
-                navigation.navigate("RegisterName");
+                // navigation.navigate("RegisterName");
               }}
               w="100%"
               style={{ marginTop: 25 }}
@@ -105,7 +102,9 @@ const Register = ({ navigation }) => {
 
             <Button
               // TODO: sign up with email
-              onPress={submit}
+              onPress={() => {
+                console.log("email")
+              }}
               w="100%"
               style={{ marginTop: 30 }}
               variant="outline"
@@ -115,7 +114,9 @@ const Register = ({ navigation }) => {
 
             <Button
               // TODO: sign up with gmail?
-              onPress={submit}
+              onPress={() => {
+                console.log("gmail")
+              }}
               w="100%"
               style={{ marginTop: 22 }}
               variant="outline"
