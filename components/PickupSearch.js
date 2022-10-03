@@ -7,13 +7,14 @@ import {
   VStack,
   Divider,
 } from "native-base";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { useContext, useEffect, useState } from "react";
 import { StyleSheet, Keyboard } from "react-native";
 import { GlobalContext } from "../contexts/global";
 const PickupSearch = () => {
   const { state, dispatch } = useContext(GlobalContext);
   const [keyboardStatus, setKeyboardStatus] = useState(false);
-
+  const [date, setDate] = useState();
   useEffect(() => {
     const keyShowSubscription = Keyboard.addListener("keyboardWillShow", () => {
       setKeyboardStatus(true);
@@ -52,6 +53,11 @@ const PickupSearch = () => {
       },
     });
   };
+
+  /**
+   * TODO: Add Datetime and passenger amt
+   * TODO: make it such that pickup and drop off cant be the same
+   */
   return (
     <Box style={{ ...styles.box, marginTop: keyboardStatus ? 0 : "auto" }}>
       <VStack>
@@ -66,7 +72,7 @@ const PickupSearch = () => {
                   From:{" "}
                 </Text>
                 {state.pickup.item ? (
-                  <Text fontSize="md" isTruncated>
+                  <Text fontSize="md" isTruncated maxWidth="300">
                     {state.pickup.item.structured_formatting.main_text}
                   </Text>
                 ) : (
@@ -84,13 +90,14 @@ const PickupSearch = () => {
                 <Text fontSize="md" bold>
                   To:{" "}
                 </Text>
-                <Text fontSize="md" isTruncated>
+                <Text fontSize="md" isTruncated maxWidth="300">
                   {state.dest.item.structured_formatting.main_text}
                 </Text>
               </HStack>
             );
           }}
         </Pressable>
+        <DateTimePicker mode="datetime" value={new Date()} />
       </VStack>
     </Box>
   );

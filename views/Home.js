@@ -67,7 +67,7 @@ const Home = ({ navigation }) => {
       return <LocationSearch style={styles.search} />;
     if (state.stage.display == "pickup") return <PickupSearch />;
   };
-
+  //TODO: FIX
   const generateDirections = () => {
     if (state.pickup.geo == null || state.dest.geo == null) return;
     return (
@@ -92,7 +92,10 @@ const Home = ({ navigation }) => {
       />
     );
   };
-
+  /**
+   *
+   * TODO: make the map expand according to the routes
+   */
   return (
     <View
       style={{
