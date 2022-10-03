@@ -19,7 +19,6 @@ import Register from "./views/Register";
 import RegisterName from "./views/RegisterName";
 import Profile from "./views/Profile";
 import { useReducer } from "react";
-
 const Stack = createNativeStackNavigator();
 const App = () => {
   const [state, dispatch] = useReducer(globalReducer, initialState, initState);
