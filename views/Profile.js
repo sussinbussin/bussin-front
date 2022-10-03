@@ -32,6 +32,7 @@ const Profile = () => {
       <Pressable
         onPress={() => {
           console.log("edit profile");
+          navigation.navigate("EditProfile");
         }}
       >
         <Flex style={{ marginTop: 5, marginBottom: 5 }} flexDirection="row">
