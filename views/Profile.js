@@ -1,5 +1,4 @@
 import {
-  Alert,
   Text,
   Box,
   Button,
@@ -9,159 +8,300 @@ import {
   Stack,
   Center,
   View,
+  Pressable,
+  Flex,
 } from "native-base";
 import { TouchableHighlight, Image } from "react-native";
 import { useContext, useState } from "react";
-import TopBar from "../components/TopBar";
+import TopBarBack from "../components/TopBarBack";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { GlobalContext } from "../contexts/global";
+import { useNavigation } from "@react-navigation/native";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 const Profile = () => {
   const { state } = useContext(GlobalContext);
   if (!state.flags.profile) return null;
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation();
 
   return (
-    <View style={{ flex: 1 }}>
-      <View style={{ alignItems: "center" }}>
-        <Box style={{ paddingTop: insets.top }}>
-          <Heading>lmao</Heading>
-        </Box>
+    <View>
+      <TopBarBack></TopBarBack>
+      <Pressable
+        onPress={() => {
+          console.log("edit profile");
+        }}
+      >
+        <Flex style={{ marginTop: 5, marginBottom: 5 }} flexDirection="row">
+          <View>
+            <AntDesign
+              name="user"
+              size={60}
+              color="pink"
+              style={{ marginLeft: 25, marginRight: 25 }}
+            />
+          </View>
 
+          <View style={{ flex: 2, marginTop: 8 }}>
+            <Text style={{ fontSize: 20, fontWeight: "bold" }}>Jolene</Text>
 
-        <Text>jolene</Text>
+            <View flexDirection="row">
+              <AntDesign
+                name="star"
+                size={15}
+                color="white"
+                style={{ marginTop: 3, marginRight: 7.5 }}
+              />
 
-        <Button
-          variant="outline"
-          onPress={() => {
-            console.log("edit profile");
-          }}
-        >
-          Edit Profile
-        </Button>
-      </View>
+              <Text style={{ fontSize: 16 }}>69.69</Text>
+            </View>
+          </View>
+          <Box style={{ flex: 1, backgroundColor: 0 }}></Box>
 
-      <View>
-        <Text style={{ fontSize: 18 }}>My Account</Text>
+          <Box style={{ flex: 1, backgroundColor: 0 }}>
+            <AntDesign
+              name="right"
+              size={15}
+              color="white"
+              style={{
+                marginLeft: 11,
+                marginTop: 13,
+              }}
+            />
+          </Box>
+        </Flex>
+      </Pressable>
 
-        <View style={{ width: "100%" }}>
-          <TouchableHighlight
-            onPress={() => {
-              console.log("scheduled");
-            }}
-          >
-            <Text>Scheduled</Text>
-          </TouchableHighlight>
-          <View
-            style={{
-              height: 1,
-              backgroundColor: "gray",
-              marginTop: 15,
-              marginBottom: 15,
-            }}
-          />
+      <Box
+        style={{
+          marginTop: 15,
+          marginBottom: 15,
+          marginLeft: 17,
+          marginRight: 17,
+        }}
+      >
+        <View>
+          <Text style={{ fontSize: 18, fontWeight: "bold", paddingBottom: 10 }}>
+            My Account
+          </Text>
 
-          <TouchableHighlight
-            onPress={() => {
-              console.log("saved");
-            }}
-          >
-            <Text>Saved Places</Text>
-          </TouchableHighlight>
-          <View
-            style={{
-              height: 1,
-              backgroundColor: "gray",
-              marginTop: 15,
-              marginBottom: 15,
-            }}
-          />
+          <View style={{ width: "100%" }}>
+            <Pressable
+              onPress={() => {
+                console.log("scheduled");
+              }}
+              flexDirection="row"
+            >
+              <Text style={{ fontSize: 15, flex: 7 }}>Scheduled</Text>
 
-          <TouchableHighlight
-            onPress={() => {
-              console.log("emergency");
-            }}
-          >
-            <Text>Emergency Contacts</Text>
-          </TouchableHighlight>
-          <View
-            style={{
-              height: 1,
-              backgroundColor: "gray",
-              marginTop: 15,
-              marginBottom: 15,
-            }}
-          />
+              <AntDesign
+                name="right"
+                size={15}
+                color="white"
+                style={{
+                  marginTop: 3,
+                  marginLeft: 10,
+                  flex: 1,
+                }}
+              />
+            </Pressable>
 
-          <TouchableHighlight
-            onPress={() => {
-              console.log("payment settings");
-            }}
-          >
-            <Text>Payment Settings</Text>
-          </TouchableHighlight>
-          <View
-            style={{
-              height: 1,
-              backgroundColor: "gray",
-              marginTop: 15,
-              marginBottom: 15,
-            }}
-          />
+            <View
+              style={{
+                height: 1,
+                backgroundColor: "gray",
+                marginTop: 15,
+                marginBottom: 15,
+              }}
+            />
+
+            <Pressable
+              onPress={() => {
+                console.log("saved");
+              }}
+              flexDirection="row"
+            >
+              <Text style={{ fontSize: 15, flex: 7 }}>Saved Places</Text>
+
+              <AntDesign
+                name="right"
+                size={15}
+                color="white"
+                style={{
+                  marginTop: 3,
+                  marginLeft: 10,
+                  flex: 1,
+                }}
+              />
+            </Pressable>
+
+            <View
+              style={{
+                height: 1,
+                backgroundColor: "gray",
+                marginTop: 15,
+                marginBottom: 15,
+              }}
+            />
+
+            <Pressable
+              onPress={() => {
+                console.log("emergency");
+              }}
+              flexDirection="row"
+            >
+              <Text style={{ fontSize: 15, flex: 7 }}>Emergency Contacts</Text>
+
+              <AntDesign
+                name="right"
+                size={15}
+                color="white"
+                style={{
+                  marginTop: 3,
+                  marginLeft: 10,
+                  flex: 1,
+                }}
+              />
+            </Pressable>
+
+            <View
+              style={{
+                height: 1,
+                backgroundColor: "gray",
+                marginTop: 15,
+                marginBottom: 15,
+              }}
+            />
+
+            <Pressable
+              onPress={() => {
+                console.log("payment settings");
+              }}
+              flexDirection="row"
+            >
+              <Text style={{ fontSize: 15, flex: 7 }}>Payment Settings</Text>
+              <AntDesign
+                name="right"
+                size={15}
+                color="white"
+                style={{
+                  marginTop: 3,
+                  marginLeft: 10,
+                  flex: 1,
+                }}
+              />
+            </Pressable>
+
+            <View
+              style={{
+                height: 1,
+                backgroundColor: "gray",
+                marginTop: 15,
+                marginBottom: 15,
+              }}
+            />
+          </View>
         </View>
-      </View>
 
-      <View>
-        <Text style={{ fontSize: 18 }}>General</Text>
+        <View style={{ marginTop: 15 }}>
+          <Text style={{ fontSize: 18, fontWeight: "bold", paddingBottom: 10 }}>
+            General
+          </Text>
 
-        <View style={{ width: "100%" }}>
-          <TouchableHighlight
-            onPress={() => {
-              console.log("halp");
-            }}
-          >
-            <Text>Help Centre</Text>
-          </TouchableHighlight>
-          <View
-            style={{
-              height: 1,
-              backgroundColor: "gray",
-              marginTop: 15,
-              marginBottom: 15,
-            }}
-          />
-          <TouchableHighlight
-            onPress={() => {
-              console.log("settings");
-            }}
-          >
-            <Text>Settings</Text>
-          </TouchableHighlight>
-          <View
-            style={{
-              height: 1,
-              backgroundColor: "gray",
-              marginTop: 15,
-              marginBottom: 15,
-            }}
-          />
-          <TouchableHighlight
-            onPress={() => {
-              console.log("feedback");
-            }}
-          >
-            <Text>Feedback</Text>
-          </TouchableHighlight>
-          <View
-            style={{
-              height: 1,
-              backgroundColor: "gray",
-              marginTop: 15,
-              marginBottom: 15,
-            }}
-          />
+          <View style={{ width: "100%" }}>
+            <Pressable
+              onPress={() => {
+                console.log("halp");
+              }}
+              flexDirection="row"
+            >
+              <Text style={{ fontSize: 15, flex: 7 }}>Help Centre</Text>
+              <AntDesign
+                name="right"
+                size={15}
+                color="white"
+                style={{
+                  marginTop: 3,
+                  marginLeft: 10,
+                  flex: 1,
+                }}
+              />
+            </Pressable>
+
+            <View
+              style={{
+                height: 1,
+                backgroundColor: "gray",
+                marginTop: 15,
+                marginBottom: 15,
+              }}
+            />
+
+            <Pressable
+              onPress={() => {
+                console.log("settings");
+              }}
+              flexDirection="row"
+            >
+              <Text style={{ fontSize: 15, flex: 7 }}>Settings</Text>
+
+              <AntDesign
+                name="right"
+                size={15}
+                color="white"
+                style={{
+                  marginTop: 3,
+                  marginLeft: 10,
+                  flex: 1,
+                }}
+              />
+            </Pressable>
+
+            <View
+              style={{
+                height: 1,
+                backgroundColor: "gray",
+                marginTop: 15,
+                marginBottom: 15,
+              }}
+            />
+
+            <Pressable
+              onPress={() => {
+                console.log("feedback");
+              }}
+              flexDirection="row"
+            >
+              <Text style={{ fontSize: 15, flex: 7 }}>Feedback</Text>
+
+              <AntDesign
+                name="right"
+                size={15}
+                color="white"
+                style={{
+                  marginTop: 3,
+                  marginLeft: 10,
+                  flex: 1,
+                }}
+              />
+            </Pressable>
+
+            <View
+              style={{
+                height: 1,
+                backgroundColor: "gray",
+                marginTop: 15,
+                marginBottom: 15,
+              }}
+            />
+          </View>
         </View>
-      </View>
+      </Box>
+
+      {/* white space if i don't add this box in ??? */}
+      <Box style={{ height: 300 }}></Box>
     </View>
   );
 };
