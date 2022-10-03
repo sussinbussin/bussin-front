@@ -6,6 +6,7 @@ import {
   Pressable,
   VStack,
   Divider,
+  Button,
 } from "native-base";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useContext, useEffect, useState } from "react";
@@ -14,7 +15,8 @@ import { GlobalContext } from "../contexts/global";
 const PickupSearch = () => {
   const { state, dispatch } = useContext(GlobalContext);
   const [keyboardStatus, setKeyboardStatus] = useState(false);
-  const [date, setDate] = useState();
+  const [date, setDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
   useEffect(() => {
     const keyShowSubscription = Keyboard.addListener("keyboardWillShow", () => {
       setKeyboardStatus(true);
@@ -53,7 +55,19 @@ const PickupSearch = () => {
       },
     });
   };
+  /**
+   *
+   * Datepicker
+   */
+  const onDateChange = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setShowDatePicker(false);
+    setDate(currentDate);
+  };
 
+  const showDateTimePicker = () => {
+    setShowDatePicker(true);
+  };
   /**
    * TODO: Add Datetime and passenger amt
    * TODO: make it such that pickup and drop off cant be the same
@@ -61,7 +75,7 @@ const PickupSearch = () => {
   return (
     <Box style={{ ...styles.box, marginTop: keyboardStatus ? 0 : "auto" }}>
       <VStack>
-        <Text bold fontSize="md">
+        <Text bold fontSize="lg">
           Select your pickup location:
         </Text>
         <Pressable onPress={handleSelectPickupWithSearch}>
@@ -72,7 +86,7 @@ const PickupSearch = () => {
                   From:{" "}
                 </Text>
                 {state.pickup.item ? (
-                  <Text fontSize="md" isTruncated maxWidth="300">
+                  <Text fontSize="md" isTruncated maxWidth="250">
                     {state.pickup.item.structured_formatting.main_text}
                   </Text>
                 ) : (
@@ -97,7 +111,16 @@ const PickupSearch = () => {
             );
           }}
         </Pressable>
-        <DateTimePicker mode="datetime" value={new Date()} />
+
+        <Button
+          _text={{
+            fontSize: "md",
+          }}
+          variant="outline"
+          isDisabled
+        >
+          Book
+        </Button>
       </VStack>
     </Box>
   );
