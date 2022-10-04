@@ -18,8 +18,8 @@ import Home from "./views/Home";
 import Register from "./views/Register";
 import RegisterName from "./views/RegisterName";
 import Profile from "./views/Profile";
+import EditProfile from "./views/EditProfile";
 import { useReducer } from "react";
-
 const Stack = createNativeStackNavigator();
 const App = () => {
   const [state, dispatch] = useReducer(globalReducer, initialState, initState);
@@ -38,7 +38,8 @@ const App = () => {
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Register" component={Register} />
             <Stack.Screen name="RegisterName" component={RegisterName} />
-            <Stack.Screen name="Profile" component={Profile} />
+            <Stack.Screen name = "Profile" component={Profile} />
+            <Stack.Screen name = "EditProfile" component={EditProfile} />
           </Stack.Navigator>
         </NavigationContainer>
         <StatusBar></StatusBar>

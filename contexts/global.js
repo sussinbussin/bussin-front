@@ -6,6 +6,7 @@ const flags = {
   register: true,
   registerName: true,
   profile: true,
+  editProfile: true,
 };
 
 /**
