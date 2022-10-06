@@ -124,6 +124,10 @@ const Home = ({ navigation }) => {
           }}
           loadingEnabled
           ref={map}
+          mapPadding={{
+            top: 80,
+            bottom: 250,
+          }}
         >
           {state.dest.geo && (
             <Marker
