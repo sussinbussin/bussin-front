@@ -31,7 +31,6 @@ const Home = ({ navigation }) => {
   const { width, height } = Dimensions.get("window");
   const [location, setLocation] = useState();
   const map = useRef();
-
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -67,115 +66,95 @@ const Home = ({ navigation }) => {
       return <LocationSearch style={styles.search} />;
     if (state.stage.display == "pickup") return <PickupSearch />;
   };
-  //TODO: FIX
-  const generateDirections = () => {
-    if (state.pickup.geo == null || state.dest.geo == null) return;
-    return (
-      <MapViewDirections
-        style={StyleSheet.absoluteFill}
-        origin={{
-          latitude: state.pickup.geo.lat,
-          longitude: state.pickup.geo.lng,
-        }}
-        desintation={{
-          latitude: state.dest.geo.lat,
-          longitude: state.dest.geo.lng,
-        }}
-        strokeWidth={3}
-        strokeColor="white"
-        apikey={GOOGLE_API_KEY}
-        onStart={(params) => {
-          console.log("started");
-        }}
-        onError={(error) => {
-          console.error(error);
-        }}
-      />
-    );
-  };
-  /**
-   *
-   * TODO: make the map expand according to the routes
-   */
+
+  const areBothLocationsGeoChosen = () => {
+    return (state.dest.geo && state.pickup.geo);
+  }
+
   return (
     <View
-      style={{
-        flex: 1,
+    style={{
+      flex: 1,
         flexDirection: "column",
         alignItems: "center",
         backgroundColor: 0,
-      }}
+    }}
     >
-      {location != null ? (
-        <MapView
-          style={StyleSheet.absoluteFill}
-          provider={PROVIDER_GOOGLE}
-          customMapStyle={mapStyle}
-          showsUserLocation={true}
-          initialCamera={{
-            center: {
-              latitude: location.latitude,
-              longitude: location.longitude,
+    {location != null ? (
+      <MapView
+      style={StyleSheet.absoluteFill}
+      provider={PROVIDER_GOOGLE}
+      customMapStyle={mapStyle}
+      showsUserLocation={true}
+      initialCamera={{
+        center: {
+          latitude: location.latitude,
+            longitude: location.longitude,
+        },
+          pitch: 0,
+          heading: 0,
+          zoom: 15,
+          altitude: location.altitude,
+      }}
+      loadingEnabled
+      ref={map}
+      mapPadding={{
+        top: 80,
+          bottom: 250,
+      }}
+      >
+      {state.dest.geo && (
+        <Marker
+        coordinate={{
+          latitude: state.dest.geo.lat,
+            longitude: state.dest.geo.lng,
+        }}
+        pinColor={"white"}
+        ></Marker>
+      )}
+      {state.pickup.geo && (
+        <Marker
+        coordinate={{
+          latitude: state.pickup.geo.lat,
+            longitude: state.pickup.geo.lng,
+        }}
+        pinColor={"white"}
+        ></Marker>
+      )}
+      {areBothLocationsGeoChosen() && (
+        //TODO: remove hardcode for origin and destination so that different routes can see
+        //TODO: add ability to show waypoints
+        //TODO: make another check for the lat lon
+        <MapViewDirections
+        origin={{
+          latitude: state.pickup.geo.lat,
+            longitude: state.pickup.geo.lng,
+        }}
+        destination={{
+          latitude: state.dest.geo.lat,
+            longitude: state.dest.geo.lng,
+        }}
+        apikey={GOOGLE_API_KEY}
+        strokeWidth={3}
+        strokeColor="white"
+        optimizeWaypoints={true}
+        onReady={(result) => {
+          map.current.fitToCoordinates(result.coordinates, {
+            edgePadding: {
+              right: width / 10,
+              bottom: height / 10,
+              left: width / 10,
+              top: height / 10,
             },
-            pitch: 0,
-            heading: 0,
-            zoom: 15,
-            altitude: location.altitude,
-          }}
-          loadingEnabled
-          ref={map}
-        >
-          {state.dest.geo && (
-            <Marker
-              coordinate={{
-                latitude: state.dest.geo.lat,
-                longitude: state.dest.geo.lng,
-              }}
-              pinColor={"white"}
-            ></Marker>
-          )}
-          {state.pickup.geo ? (
-            <Marker
-              coordinate={{
-                latitude: state.pickup.geo.lat,
-                longitude: state.pickup.geo.lng,
-              }}
-              pinColor={"white"}
-            ></Marker>
-          ) : null}
-          {state.dest.geo && state.pickup.geo && (
-            //TODO: remove hardcode for origin and destination so that different routes can see
-            //TODO: add ability to show waypoints
-            <MapViewDirections
-              origin={{
-                latitude: state.pickup.geo.lat,
-                longitude: state.pickup.geo.lng,
-              }}
-              destination={{
-                latitude: state.dest.geo.lat,
-                longitude: state.dest.geo.lng,
-              }}
-              apikey={GOOGLE_API_KEY}
-              strokeWidth={3}
-              strokeColor="white"
-              optimizeWaypoints={true}
-              onReady={(result) => {
-                map.current.fitToCoordinates(result.coordinates, {
-                  edgePadding: {
-                    right: width / 10,
-                    bottom: height / 10,
-                    left: width / 10,
-                    top: height / 10,
-                  },
-                  animated: true,
-                });
-              }}
-            />
-          )}
-        </MapView>
-      ) : null}
-      <HomeTopBar />
-      {bottomBar()}
+            animated: true,
+          });
+        }}
+        />
+      )}
+      </MapView>
+    ) : null}
+    <HomeTopBar />
+    {bottomBar()}
     </View>
   );
 };

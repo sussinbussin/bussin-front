@@ -105,7 +105,7 @@ const LocationSearch = () => {
         },
       });
     }
-    console.log(state);
+    //console.log(state);
     dispatch({ type: "MODIFY_STAGE", payload: payload });
     Keyboard.dismiss();
     //setDestination(item);
