@@ -8,7 +8,7 @@ import {
   Divider,
   Button,
 } from "native-base";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useContext, useEffect, useState } from "react";
 import { StyleSheet, Keyboard } from "react-native";
 import { GlobalContext } from "../contexts/global";
@@ -16,7 +16,8 @@ const PickupSearch = () => {
   const { state, dispatch } = useContext(GlobalContext);
   const [keyboardStatus, setKeyboardStatus] = useState(false);
   const [date, setDate] = useState(new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
   useEffect(() => {
     const keyShowSubscription = Keyboard.addListener("keyboardWillShow", () => {
       setKeyboardStatus(true);
@@ -55,23 +56,26 @@ const PickupSearch = () => {
       },
     });
   };
+
   /**
    *
    * Datepicker
    */
-  const onDateChange = (event, selectedDate) => {
-    const currentDate = selectedDate;
-    setShowDatePicker(false);
-    setDate(currentDate);
-  };
-
   const showDateTimePicker = () => {
-    setShowDatePicker(true);
+    setDatePickerVisibility(true);
   };
-
+  const hideDateTimePicker = () => {
+    setDatePickerVisibility(false);
+  }
+  const handleDateTimeSelect = (date) => {
+    setDate(date);
+    console.log(date);
+    hideDateTimePicker();
+  }
   const isBookDisabled = () => {
     return !(state.pickup.item && state.dest.item);
   }
+
   /**
    * TODO: Add Datetime and passenger amt
    * TODO: make it such that pickup and drop off cant be the same
@@ -125,7 +129,17 @@ const PickupSearch = () => {
       );
     }}
     </Pressable>
-    <HStack></HStack>
+    <HStack>
+    <Button onPress={showDateTimePicker} variant="ghost">
+    Date
+    </Button>
+    </HStack>
+    <DateTimePickerModal
+    isVisible={isDatePickerVisible}
+    mode="datetime"
+    onConfirm={handleDateTimeSelect}
+    onCancel={hideDateTimePicker}
+    />
     <Button
     style={{
       marginTop: 10,
