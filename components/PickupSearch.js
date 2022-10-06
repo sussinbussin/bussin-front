@@ -68,73 +68,77 @@ const PickupSearch = () => {
   const showDateTimePicker = () => {
     setShowDatePicker(true);
   };
+
+  const isBookDisabled = () => {
+    return !(state.pickup.item && state.dest.item);
+  }
   /**
    * TODO: Add Datetime and passenger amt
    * TODO: make it such that pickup and drop off cant be the same
    */
   return (
     <Box style={{ ...styles.box, marginTop: keyboardStatus ? 0 : "auto" }}>
-      <VStack>
-        <Text bold fontSize="lg">
-          Select your pickup location:
+    <VStack>
+    <Text bold fontSize="lg">
+    Select your pickup location:
+    </Text>
+    <Pressable onPress={handleSelectPickupWithSearch}>
+    {({ isPressed }) => {
+      return (
+        <HStack style={{ transform: [{ scale: isPressed ? 0.96 : 1 }] }}>
+        <Text fontSize="md" bold style={styles.text}>
+        From:{" "}
         </Text>
-        <Pressable onPress={handleSelectPickupWithSearch}>
-          {({ isPressed }) => {
-            return (
-              <HStack style={{ transform: [{ scale: isPressed ? 0.96 : 1 }] }}>
-                <Text fontSize="md" bold style={styles.text}>
-                  From:{" "}
-                </Text>
-                {state.pickup.item ? (
-                  <Text
-                    fontSize="md"
-                    isTruncated
-                    maxWidth="250"
-                    style={styles.text}
-                  >
-                    {state.pickup.item.structured_formatting.main_text}
-                  </Text>
-                ) : (
-                  <Text></Text>
-                )}
-              </HStack>
-            );
-          }}
-        </Pressable>
-        <Divider />
-        <Pressable onPress={handleBackToDestination}>
-          {({ isPressed }) => {
-            return (
-              <HStack style={{ transform: [{ scale: isPressed ? 0.96 : 1 }] }}>
-                <Text fontSize="md" bold style={styles.text}>
-                  To:{" "}
-                </Text>
-                <Text
-                  fontSize="md"
-                  isTruncated
-                  maxWidth="300"
-                  style={styles.text}
-                >
-                  {state.dest.item.structured_formatting.main_text}
-                </Text>
-              </HStack>
-            );
-          }}
-        </Pressable>
-        <HStack></HStack>
-        <Button
-          style={{
-            marginTop: 10,
-          }}
-          _text={{
-            fontSize: "md",
-          }}
-          variant="outline"
-          isDisabled
+        {state.pickup.item ? (
+          <Text
+          fontSize="md"
+          isTruncated
+          maxWidth="250"
+          style={styles.text}
+          >
+          {state.pickup.item.structured_formatting.main_text}
+          </Text>
+        ) : (
+          <Text></Text>
+        )}
+        </HStack>
+      );
+    }}
+    </Pressable>
+    <Divider />
+    <Pressable onPress={handleBackToDestination}>
+    {({ isPressed }) => {
+      return (
+        <HStack style={{ transform: [{ scale: isPressed ? 0.96 : 1 }] }}>
+        <Text fontSize="md" bold style={styles.text}>
+        To:{" "}
+        </Text>
+        <Text
+        fontSize="md"
+        isTruncated
+        maxWidth="300"
+        style={styles.text}
         >
-          Book
-        </Button>
-      </VStack>
+        {state.dest.item.structured_formatting.main_text}
+        </Text>
+        </HStack>
+      );
+    }}
+    </Pressable>
+    <HStack></HStack>
+    <Button
+    style={{
+      marginTop: 10,
+    }}
+    _text={{
+      fontSize: "md",
+    }}
+    variant="outline"
+    isDisabled={isBookDisabled()}
+    >
+    Book
+    </Button>
+    </VStack>
     </Box>
   );
 };
