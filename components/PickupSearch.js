@@ -121,7 +121,7 @@ const PickupSearch = () => {
             );
           }}
         </Pressable>
-
+        <HStack></HStack>
         <Button
           style={{
             marginTop: 10,

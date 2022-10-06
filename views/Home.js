@@ -28,7 +28,7 @@ const Home = ({ navigation }) => {
   const { state, dispatch } = useContext(GlobalContext);
   if (!state.flags.home) return null;
   const insets = useSafeAreaInsets();
-
+  const { width, height } = Dimensions.get("window");
   const [location, setLocation] = useState();
   const map = useRef();
 
@@ -72,6 +72,7 @@ const Home = ({ navigation }) => {
     if (state.pickup.geo == null || state.dest.geo == null) return;
     return (
       <MapViewDirections
+        style={StyleSheet.absoluteFill}
         origin={{
           latitude: state.pickup.geo.lat,
           longitude: state.pickup.geo.lng,
@@ -124,8 +125,7 @@ const Home = ({ navigation }) => {
           loadingEnabled
           ref={map}
         >
-          {generateDirections()}
-          {state.dest.geo ? (
+          {state.dest.geo && (
             <Marker
               coordinate={{
                 latitude: state.dest.geo.lat,
@@ -133,7 +133,7 @@ const Home = ({ navigation }) => {
               }}
               pinColor={"white"}
             ></Marker>
-          ) : null}
+          )}
           {state.pickup.geo ? (
             <Marker
               coordinate={{
@@ -143,6 +143,35 @@ const Home = ({ navigation }) => {
               pinColor={"white"}
             ></Marker>
           ) : null}
+          {state.dest.geo && state.pickup.geo && (
+            //TODO: remove hardcode for origin and destination so that different routes can see
+            //TODO: add ability to show waypoints
+            <MapViewDirections
+              origin={{
+                latitude: state.pickup.geo.lat,
+                longitude: state.pickup.geo.lng,
+              }}
+              destination={{
+                latitude: state.dest.geo.lat,
+                longitude: state.dest.geo.lng,
+              }}
+              apikey={GOOGLE_API_KEY}
+              strokeWidth={3}
+              strokeColor="white"
+              optimizeWaypoints={true}
+              onReady={(result) => {
+                map.current.fitToCoordinates(result.coordinates, {
+                  edgePadding: {
+                    right: width / 10,
+                    bottom: height / 10,
+                    left: width / 10,
+                    top: height / 10,
+                  },
+                  animated: true,
+                });
+              }}
+            />
+          )}
         </MapView>
       ) : null}
       <HomeTopBar />
@@ -152,11 +181,11 @@ const Home = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  map: {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
-    position: "absolute",
-    zIndex: -1,
-  },
+  //map: {
+  //  width: Dimensions.get("window").width,
+  //  height: Dimensions.get("window").height,
+  //  position: "absolute",
+  //  zIndex: -1,
+  //},
 });
 export default Home;

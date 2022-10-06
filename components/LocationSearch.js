@@ -66,8 +66,8 @@ const LocationSearch = () => {
   const handleSetDestination = async (item) => {
     const { getGeometry } = usePlacesAPI(item.place_id);
     let geog = await getGeometry();
-    console.log(state.stage.level);
-    console.log(geog);
+    //console.log(state.stage.level);
+    //console.log(geog);
 
     //console.log(item);
     let payload = {};
