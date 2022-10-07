@@ -14,6 +14,8 @@ import { GlobalContext } from "../contexts/global";
 import TopBar from "../components/TopBar";
 import {useLoginAPI} from "../api/LoginApi";
 
+import * as SecureStore from 'expo-secure-store';
+
 const Login = ({ navigation }) => {
   //used for feature toggling
   const { state } = useContext(GlobalContext);
@@ -34,6 +36,8 @@ const Login = ({ navigation }) => {
     }
     const token = await loginUser();
     console.log(token);
+    
+    await SecureStore.setItemAsync("token", token.AuthenticationResult.AccessToken);
     navigation.navigate("Home");
   };
 
