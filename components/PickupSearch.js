@@ -8,15 +8,17 @@ import {
   Divider,
   Button,
 } from "native-base";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useContext, useEffect, useState } from "react";
 import { StyleSheet, Keyboard } from "react-native";
 import { GlobalContext } from "../contexts/global";
+import dayjs from "dayjs";
 const PickupSearch = () => {
   const { state, dispatch } = useContext(GlobalContext);
   const [keyboardStatus, setKeyboardStatus] = useState(false);
   const [date, setDate] = useState(new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
   useEffect(() => {
     const keyShowSubscription = Keyboard.addListener("keyboardWillShow", () => {
       setKeyboardStatus(true);
@@ -55,90 +57,102 @@ const PickupSearch = () => {
       },
     });
   };
+
   /**
    *
    * Datepicker
    */
-  const onDateChange = (event, selectedDate) => {
-    const currentDate = selectedDate;
-    setShowDatePicker(false);
-    setDate(currentDate);
-  };
-
   const showDateTimePicker = () => {
-    setShowDatePicker(true);
+    setDatePickerVisibility(true);
   };
-
+  const hideDateTimePicker = () => {
+    setDatePickerVisibility(false);
+  };
+  const handleDateTimeSelect = (date) => {
+    setDate(date);
+    hideDateTimePicker();
+  };
   const isBookDisabled = () => {
     return !(state.pickup.item && state.dest.item);
-  }
+  };
+
   /**
    * TODO: Add Datetime and passenger amt
    * TODO: make it such that pickup and drop off cant be the same
    */
   return (
     <Box style={{ ...styles.box, marginTop: keyboardStatus ? 0 : "auto" }}>
-    <VStack>
-    <Text bold fontSize="lg">
-    Select your pickup location:
-    </Text>
-    <Pressable onPress={handleSelectPickupWithSearch}>
-    {({ isPressed }) => {
-      return (
-        <HStack style={{ transform: [{ scale: isPressed ? 0.96 : 1 }] }}>
-        <Text fontSize="md" bold style={styles.text}>
-        From:{" "}
+      <VStack>
+        <Text bold fontSize="lg">
+          Select your pickup location:
         </Text>
-        {state.pickup.item ? (
-          <Text
-          fontSize="md"
-          isTruncated
-          maxWidth="250"
-          style={styles.text}
-          >
-          {state.pickup.item.structured_formatting.main_text}
-          </Text>
-        ) : (
-          <Text></Text>
-        )}
+        <Pressable onPress={handleSelectPickupWithSearch}>
+          {({ isPressed }) => {
+            return (
+              <HStack style={{ transform: [{ scale: isPressed ? 0.96 : 1 }] }}>
+                <Text fontSize="md" bold style={styles.text}>
+                  From:{" "}
+                </Text>
+                {state.pickup.item ? (
+                  <Text
+                    fontSize="md"
+                    isTruncated
+                    maxWidth="250"
+                    style={styles.text}
+                  >
+                    {state.pickup.item.structured_formatting.main_text}
+                  </Text>
+                ) : (
+                  <Text></Text>
+                )}
+              </HStack>
+            );
+          }}
+        </Pressable>
+        <Divider />
+        <Pressable onPress={handleBackToDestination}>
+          {({ isPressed }) => {
+            return (
+              <HStack style={{ transform: [{ scale: isPressed ? 0.96 : 1 }] }}>
+                <Text fontSize="md" bold style={styles.text}>
+                  To:{" "}
+                </Text>
+                <Text
+                  fontSize="md"
+                  isTruncated
+                  maxWidth="300"
+                  style={styles.text}
+                >
+                  {state.dest.item.structured_formatting.main_text}
+                </Text>
+              </HStack>
+            );
+          }}
+        </Pressable>
+        <HStack>
+          <Button onPress={showDateTimePicker}>
+            {dayjs(date).format("DD/MM h:mma")}
+          </Button>
         </HStack>
-      );
-    }}
-    </Pressable>
-    <Divider />
-    <Pressable onPress={handleBackToDestination}>
-    {({ isPressed }) => {
-      return (
-        <HStack style={{ transform: [{ scale: isPressed ? 0.96 : 1 }] }}>
-        <Text fontSize="md" bold style={styles.text}>
-        To:{" "}
-        </Text>
-        <Text
-        fontSize="md"
-        isTruncated
-        maxWidth="300"
-        style={styles.text}
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="datetime"
+          onConfirm={handleDateTimeSelect}
+          onCancel={hideDateTimePicker}
+        />
+        <Button
+          style={{
+            marginTop: 10,
+          }}
+          _text={{
+            fontSize: "md",
+          }}
+          variant="outline"
+          isDisabled={isBookDisabled()}
         >
-        {state.dest.item.structured_formatting.main_text}
-        </Text>
-        </HStack>
-      );
-    }}
-    </Pressable>
-    <HStack></HStack>
-    <Button
-    style={{
-      marginTop: 10,
-    }}
-    _text={{
-      fontSize: "md",
-    }}
-    variant="outline"
-    isDisabled={isBookDisabled()}
-    >
-    Book
-    </Button>
-    </VStack>
+          Book
+        </Button>
+      </VStack>
     </Box>
   );
 };
