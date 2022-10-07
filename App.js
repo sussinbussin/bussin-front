@@ -19,12 +19,16 @@ import Register from "./views/Register";
 import RegisterName from "./views/RegisterName";
 import Profile from "./views/Profile";
 import EditProfile from "./views/EditProfile";
+import Scheduled from "./views/Scheduled";
 import { useReducer } from "react";
+
 const Stack = createNativeStackNavigator();
+
 const App = () => {
   const [state, dispatch] = useReducer(globalReducer, initialState, initState);
   const colorScheme = useColorScheme();
   const theme = extendTheme(colorScheme === "dark" ? darkModeTheme : {});
+
   return (
     <GlobalContext.Provider value={{ state, dispatch }}>
       <NativeBaseProvider theme={theme}>
@@ -40,6 +44,7 @@ const App = () => {
             <Stack.Screen name="RegisterName" component={RegisterName} />
             <Stack.Screen name = "Profile" component={Profile} />
             <Stack.Screen name = "EditProfile" component={EditProfile} />
+            <Stack.Screen name = "Scheduled" component={Scheduled} />
           </Stack.Navigator>
         </NavigationContainer>
         <StatusBar></StatusBar>
