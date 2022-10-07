@@ -12,6 +12,7 @@ import {
 import { useContext, useState } from "react";
 import { GlobalContext } from "../contexts/global";
 import TopBar from "../components/TopBar";
+import {useLoginAPI} from "../api/LoginApi";
 
 const Login = ({ navigation }) => {
   //used for feature toggling
@@ -21,13 +22,18 @@ const Login = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const { loginUser } = useLoginAPI(username, password);
+
   const handlePassword = (value) => setPassword(value);
   const handleUsername = (value) => setUsername(value);
 
-  const submit = () => {
+  const submit = async () => {
     if (username == "" || password == "") {
       //TODO: handle invalid input
+      return;
     }
+    const token = await loginUser();
+    console.log(token);
     navigation.navigate("Home");
   };
 
