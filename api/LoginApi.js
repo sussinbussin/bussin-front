@@ -1,5 +1,6 @@
 import { COGNITO_ENDPOINT, COGNITO_CLIENTID } from "@env";
 import ky from "ky";
+import jwtDecode from "jwt-decode";
 
 const api = ky.create({
   prefixUrl: COGNITO_ENDPOINT,
@@ -11,8 +12,8 @@ const api = ky.create({
  * */
 const useLoginAPI = (username, password) => {
   const loginUser = async () => {
-    let data = null;
-
+    let token = null;
+    let error = false;
     try {
       const res = await api.post("", {
         json: {
@@ -28,11 +29,16 @@ const useLoginAPI = (username, password) => {
           "Content-Type": "application/x-amz-json-1.1",
         },
       });
-      data = await res.json();
+      token = await res.json();
       //TODO: data validation and error handling
-      return data;
+      //this is dumb
+      let authToken = token.AuthenticationResult.IdToken;
+      let decodeToken = jwtDecode(authToken);
+      let email = decodeToken.email;
+
+      return { token, email };
     } catch (error) {
-      console.error(error);
+      return;
     }
   };
   return { loginUser };

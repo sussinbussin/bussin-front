@@ -13,19 +13,18 @@ import { useContext, useState } from "react";
 import { GlobalContext } from "../contexts/global";
 import TopBar from "../components/TopBar";
 import { useLoginAPI } from "../api/LoginApi";
-
+import { useUserAPI } from "../api/UsersAPI";
 import * as SecureStore from "expo-secure-store";
 
 const Login = ({ navigation }) => {
   //used for feature toggling
-  const { state } = useContext(GlobalContext);
+  const { state, dispatch } = useContext(GlobalContext);
   if (!state.flags.login) return null;
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const { loginUser } = useLoginAPI(username, password);
-
   const handlePassword = (value) => setPassword(value);
   const handleUsername = (value) => setUsername(value);
 
@@ -35,15 +34,36 @@ const Login = ({ navigation }) => {
       if (!state.flags.requireLogin) {
         navigation.navigate("Home");
       }
-      //TODO: handle invalid input
       return;
     }
-    const token = await loginUser();
-    console.log(token);
 
+    let { token, email } = await loginUser();
+    if (!token) {
+      //handle invalid user
+      console.log("Invalid user");
+      return;
+    }
+
+    const { getUser } = useUserAPI(token.AuthenticationResult.IdToken, email);
+    let user = await getUser();
+    if (!user) {
+      //this one hong gan lo
+      return;
+    }
+
+    dispatch({ type: "SET_USER", payload: user });
+    dispatch({
+      type: "MODIFY_STAGE",
+      payload: {
+        ...state.stage,
+        locationSearch: {
+          text: `Where to, ${user.name}?`,
+        },
+      },
+    });
     await SecureStore.setItemAsync(
-      "token",
-      token.AuthenticationResult
+      "idToken",
+      JSON.stringify(token.AuthenticationResult.IdToken)
     );
     navigation.navigate("Home");
   };
