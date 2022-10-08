@@ -12,7 +12,9 @@ import {
 import { useContext, useState } from "react";
 import { GlobalContext } from "../contexts/global";
 import TopBar from "../components/TopBar";
-import {useLoginAPI} from "../api/LoginApi";
+import { useLoginAPI } from "../api/LoginApi";
+
+import * as SecureStore from "expo-secure-store";
 
 const Login = ({ navigation }) => {
   //used for feature toggling
@@ -28,12 +30,21 @@ const Login = ({ navigation }) => {
   const handleUsername = (value) => setUsername(value);
 
   const submit = async () => {
+    //for development
     if (username == "" || password == "") {
+      if (!state.flags.requireLogin) {
+        navigation.navigate("Home");
+      }
       //TODO: handle invalid input
       return;
     }
     const token = await loginUser();
     console.log(token);
+
+    await SecureStore.setItemAsync(
+      "token",
+      token.AuthenticationResult
+    );
     navigation.navigate("Home");
   };
 

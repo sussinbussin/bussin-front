@@ -36,6 +36,7 @@ const App = () => {
           <Stack.Navigator
             screenOptions={{
               headerShown: false,
+              gestureEnabled:false
             }}
           >
             <Stack.Screen name="Login" component={Login} />

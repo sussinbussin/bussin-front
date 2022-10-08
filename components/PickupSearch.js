@@ -1,4 +1,5 @@
 import {
+  Menu,
   Box,
   Heading,
   Text,
@@ -7,6 +8,7 @@ import {
   VStack,
   Divider,
   Button,
+  Select,
 } from "native-base";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useContext, useEffect, useState } from "react";
@@ -73,8 +75,16 @@ const PickupSearch = () => {
     hideDateTimePicker();
   };
   const isBookDisabled = () => {
-    return !(state.pickup.item && state.dest.item);
+    return !(state.pickup.item && state.dest.item && date);
   };
+
+  /*
+   *
+   * Booking
+   * */
+  const handleBook = () => {
+    console.log("book")
+  }
 
   /**
    * TODO: Add Datetime and passenger amt
@@ -129,8 +139,14 @@ const PickupSearch = () => {
             );
           }}
         </Pressable>
+
         <HStack>
-          <Button onPress={showDateTimePicker}>
+          <Button
+            onPress={showDateTimePicker}
+            style={{
+              paddingLeft: 0,
+            }}
+          >
             {dayjs(date).format("DD/MM h:mma")}
           </Button>
         </HStack>
@@ -149,6 +165,7 @@ const PickupSearch = () => {
           }}
           variant="outline"
           isDisabled={isBookDisabled()}
+          onPress={handleBook}
         >
           Book
         </Button>

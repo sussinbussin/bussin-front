@@ -7,6 +7,7 @@ const flags = {
   registerName: true,
   profile: true,
   editProfile: true,
+  requireLogin: false
 };
 
 /**
