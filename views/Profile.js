@@ -25,6 +25,7 @@ const Profile = () => {
   if (!state.flags.profile) return null;
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
+  const [name, setName] = useState("Jolene");
 
   return (
     <View>
@@ -32,7 +33,7 @@ const Profile = () => {
       <Pressable
         onPress={() => {
           console.log("edit profile");
-          navigation.navigate("EditProfile");
+          navigation.navigate("EditProfile", { name: name });
         }}
       >
         <Flex style={{ marginTop: 5, marginBottom: 5 }} flexDirection="row">
@@ -46,7 +47,7 @@ const Profile = () => {
           </View>
 
           <View style={{ flex: 2, marginTop: 8 }}>
-            <Text style={{ fontSize: 20, fontWeight: "bold" }}>Jolene</Text>
+            <Text style={{ fontSize: 20, fontWeight: "bold" }}>{name}</Text>
 
             <View flexDirection="row">
               <AntDesign
@@ -121,6 +122,7 @@ const Profile = () => {
             <Pressable
               onPress={() => {
                 console.log("saved");
+                navigation.navigate("BookingConfirmation");
               }}
               flexDirection="row"
             >
