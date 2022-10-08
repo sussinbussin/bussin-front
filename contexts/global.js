@@ -7,7 +7,7 @@ const flags = {
   registerName: true,
   profile: true,
   editProfile: true,
-  requireLogin: false
+  requireLogin: false,
 };
 
 /**
@@ -42,6 +42,8 @@ const initialState = {
     item: null,
     geo: null,
   },
+  token: null,
+  user: null,
 };
 const initState = () => initialState;
 const globalReducer = (state, action) => {
@@ -65,6 +67,11 @@ const globalReducer = (state, action) => {
       return {
         ...state,
         camera: action.payload,
+      };
+    case "SET_USER":
+      return {
+        ...state,
+        user: action.payload,
       };
     default:
       return state;
