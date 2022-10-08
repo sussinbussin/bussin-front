@@ -15,6 +15,7 @@ const useUserAPI = (token, email) => {
     try {
       const res = await api.get(`users/byEmail/${email}`);
       data = await res.json();
+      console.log(data);
       return data;
     } catch (error) {
       return;
