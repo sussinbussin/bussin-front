@@ -91,20 +91,32 @@ const PickupSearch = () => {
     //  `${state.dest.geo.lat},${state.dest.geo.lng}`
     //);
     const { recommend } = useRecommenderAPI();
-    //const result = await recommend({
-    //  originLat: state.pickup.geo.lat,
-    //  originLng: state.pickup.geo.lng,
-    //  destLat: state.dest.geo.lat,
-    //  destLng: state.dest.geo.lng,
-    //});
     const result = await recommend({
-      originLat: 1.2977,
-      originLng: 103.84912,
-      destLat: 1.44917,
-      destLng: 103.8199,
+      originLat: state.pickup.geo.lat,
+      originLng: state.pickup.geo.lng,
+      destLat: state.dest.geo.lat,
+      destLng: state.dest.geo.lng,
       time: "2022/10/06 07:30:00",
     });
     console.log(result);
+
+    if (!result) return;
+
+    dispatch({ type: "SET_ROUTES", payload: result });
+    dispatch({
+      type: "MODIFY_STAGE",
+      payload: {
+        ...state.stage,
+        level: "CHOOSING_DRIVER",
+      },
+    });
+    //const result = await recommend({
+    //  originLat: 1.2977,
+    //  originLng: 103.84912,
+    //  destLat: 1.44917,
+    //  destLng: 103.8199,
+    //  time: "2022/10/06 07:30:00",
+    //});
   };
 
   /**

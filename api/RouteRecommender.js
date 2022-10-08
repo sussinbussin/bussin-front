@@ -3,7 +3,7 @@ import ky from "ky";
 
 const useRecommenderAPI = () => {
   const api = ky.create({
-    prefixUrl: BETTER_API_ROUTE,
+    prefixUrl: "http://bussinroutes.ap-southeast-1.elasticbeanstalk.com/v1",
   });
   const recommend = async (coords) => {
     console.log(coords);
@@ -19,8 +19,9 @@ const useRecommenderAPI = () => {
         },
       });
       data = await res.json();
+      return data;
     } catch (error) {
-      console.log(error);
+      return;
     }
   };
 
