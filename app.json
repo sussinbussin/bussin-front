@@ -18,13 +18,18 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "bundleIdentifier": "com.anonymous.bussinfront",
+      "infoPList": {
+        "NSFaceIDUsageDescription": "Log In with FaceID"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.anonymous.bussinfront"
     },
     "web": {
       "favicon": "./assets/favicon.png"

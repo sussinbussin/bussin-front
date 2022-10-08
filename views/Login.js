@@ -9,12 +9,14 @@ import {
   Center,
   View,
 } from "native-base";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { GlobalContext } from "../contexts/global";
 import TopBar from "../components/TopBar";
 import { useLoginAPI } from "../api/LoginApi";
 import { useUserAPI } from "../api/UsersAPI";
 import * as SecureStore from "expo-secure-store";
+import * as LocalAuthentication from "expo-local-authentication";
+import jwtDecode from "jwt-decode";
 
 const Login = ({ navigation }) => {
   //used for feature toggling
@@ -27,6 +29,44 @@ const Login = ({ navigation }) => {
   const { loginUser } = useLoginAPI(username, password);
   const handlePassword = (value) => setPassword(value);
   const handleUsername = (value) => setUsername(value);
+
+  //check for biometrics
+  useEffect(() => {
+    if (!state.biometrics) return;
+
+    (async () => {
+      //check if supported
+      const compat = await LocalAuthentication.hasHardwareAsync();
+      if (!compat) return;
+
+      const enrolled = await LocalAuthentication.isEnrolledAsync();
+      if (!enrolled) return;
+
+      //check if user logged in
+      let token = await SecureStore.getItemAsync("idToken");
+      token = JSON.parse(token);
+      if (!token) return;
+
+      const check = await LocalAuthentication.authenticateAsync();
+      if (!check.success) return;
+
+      const decodedToken = jwtDecode(token);
+      const { getUser } = useUserAPI(token, decodedToken.email);
+      let user = await getUser();
+      if (!user) return;
+      dispatch({ type: "SET_USER", payload: user });
+      dispatch({
+        type: "MODIFY_STAGE",
+        payload: {
+          ...state.stage,
+          locationSearch: {
+            text: `Where to, ${user.name}?`,
+          },
+        },
+      });
+      navigation.navigate("Home");
+    })();
+  }, []);
 
   const submit = async () => {
     //for development
@@ -61,6 +101,11 @@ const Login = ({ navigation }) => {
         },
       },
     });
+    dispatch({
+      type: "SET_TOKEN",
+      payload: token.AuthenticationResult.IdToken,
+    });
+
     await SecureStore.setItemAsync(
       "idToken",
       JSON.stringify(token.AuthenticationResult.IdToken)
