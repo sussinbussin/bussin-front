@@ -26,21 +26,27 @@ import { RegisterName } from "./RegisterName";
 //     // const editedUsername = ???? need route or smth is it
 // };
 
-const EditProfile = () => {
+const EditProfile = ({navigate, route}) => {
   const { state } = useContext(GlobalContext);
   if (!state.flags.editProfile) return null;
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
 
   // idk how to call from db or something?
-  const [name, setName] = useState("Jolene");
+  const [name, setName] = useState(route.params.name);
   const [number, setNumber] = useState("88888888");
   const [email, setEmail] = useState("jolene@gmail.com");
 
   const handleName = (newName) => setName(newName);
   const submit = () => {
-    // TODO: save updated details???? 
-  }
+    // TODO: save updated details????
+    console.log(name);
+
+    // TODO: save updated name / details in db, reflect in profile
+    navigation.navigate("Profile", {name:name});
+    return name;
+
+  };
   // TODO: add edit / save button to confirm changes
   // and update details accordingly???? idk man
 
@@ -92,6 +98,15 @@ const EditProfile = () => {
             variant="underlined"
             size="lg"
           />
+
+          <Button
+            onPress={submit}
+            w="100%"
+            style={{ marginTop: 25 }}
+            variant="outline"
+          >
+            Save changes
+          </Button>
         </Stack>
       </Box>
     </View>
