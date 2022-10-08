@@ -16,6 +16,7 @@ import { useLoginAPI } from "../api/LoginApi";
 import { useUserAPI } from "../api/UsersAPI";
 import * as SecureStore from "expo-secure-store";
 import * as LocalAuthentication from "expo-local-authentication";
+import jwtDecode from "jwt-decode";
 
 const Login = ({ navigation }) => {
   //used for feature toggling
@@ -46,10 +47,27 @@ const Login = ({ navigation }) => {
       token = JSON.parse(token);
       if (!token) return;
 
-      const check = LocalAuthentication.authenticateAsync();
-      console.log(check);
+      const check = await LocalAuthentication.authenticateAsync();
+      if (!check.success) return;
+
+      const decodedToken = jwtDecode(token);
+      const { getUser } = useUserAPI(token, decodedToken.email);
+      let user = await getUser();
+      if (!user) return;
+      dispatch({ type: "SET_USER", payload: user });
+      dispatch({
+        type: "MODIFY_STAGE",
+        payload: {
+          ...state.stage,
+          locationSearch: {
+            text: `Where to, ${user.name}?`,
+          },
+        },
+      });
+      navigation.navigate("Home");
     })();
   }, []);
+
   const submit = async () => {
     //for development
     if (username == "" || password == "") {
