@@ -61,6 +61,11 @@ const Login = ({ navigation }) => {
         },
       },
     });
+    dispatch({
+      type: "SET_TOKEN",
+      payload: token.AuthenticationResult.IdToken,
+    });
+
     await SecureStore.setItemAsync(
       "idToken",
       JSON.stringify(token.AuthenticationResult.IdToken)
