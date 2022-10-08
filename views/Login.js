@@ -43,7 +43,7 @@ const Login = ({ navigation }) => {
 
     await SecureStore.setItemAsync(
       "token",
-      token.AuthenticationResult.AccessToken
+      token.AuthenticationResult
     );
     navigation.navigate("Home");
   };
