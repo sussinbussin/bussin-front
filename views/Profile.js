@@ -122,6 +122,7 @@ const Profile = () => {
             <Pressable
               onPress={() => {
                 console.log("saved");
+                navigation.navigate("BookingConfirmation");
               }}
               flexDirection="row"
             >
