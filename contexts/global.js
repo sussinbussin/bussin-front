@@ -44,6 +44,7 @@ const initialState = {
   },
   token: null,
   user: null,
+  biometrics: true,
 };
 const initState = () => initialState;
 const globalReducer = (state, action) => {

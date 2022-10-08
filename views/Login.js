@@ -9,12 +9,13 @@ import {
   Center,
   View,
 } from "native-base";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { GlobalContext } from "../contexts/global";
 import TopBar from "../components/TopBar";
 import { useLoginAPI } from "../api/LoginApi";
 import { useUserAPI } from "../api/UsersAPI";
 import * as SecureStore from "expo-secure-store";
+import * as LocalAuthentication from "expo-local-authentication";
 
 const Login = ({ navigation }) => {
   //used for feature toggling
@@ -28,6 +29,27 @@ const Login = ({ navigation }) => {
   const handlePassword = (value) => setPassword(value);
   const handleUsername = (value) => setUsername(value);
 
+  //check for biometrics
+  useEffect(() => {
+    if (!state.biometrics) return;
+
+    (async () => {
+      //check if supported
+      const compat = await LocalAuthentication.hasHardwareAsync();
+      if (!compat) return;
+
+      const enrolled = await LocalAuthentication.isEnrolledAsync();
+      if (!enrolled) return;
+
+      //check if user logged in
+      let token = await SecureStore.getItemAsync("idToken");
+      token = JSON.parse(token);
+      if (!token) return;
+
+      const check = LocalAuthentication.authenticateAsync();
+      console.log(check);
+    })();
+  }, []);
   const submit = async () => {
     //for development
     if (username == "" || password == "") {
