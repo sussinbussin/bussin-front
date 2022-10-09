@@ -84,7 +84,7 @@ const globalReducer = (state, action) => {
     case "SET_ROUTES":
       return {
         ...state,
-        route: action.payload,
+        routes: action.payload,
       };
     default:
       return state;

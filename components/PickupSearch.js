@@ -98,16 +98,19 @@ const PickupSearch = () => {
       destLng: state.dest.geo.lng,
       time: "2022/10/06 07:30:00",
     });
-    console.log(result);
 
     if (!result) return;
-
-    dispatch({ type: "SET_ROUTES", payload: result });
+    let routes = result["Recommended Driver Routes"];
+    dispatch({
+      type: "SET_ROUTES",
+      payload: routes,
+    });
     dispatch({
       type: "MODIFY_STAGE",
       payload: {
         ...state.stage,
         level: "CHOOSING_DRIVER",
+        display: "recommend",
       },
     });
     //const result = await recommend({
