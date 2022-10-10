@@ -46,6 +46,7 @@ const initialState = {
   token: null,
   user: null,
   biometrics: true,
+  routes: null,
 };
 const initState = () => initialState;
 const globalReducer = (state, action) => {
@@ -79,6 +80,11 @@ const globalReducer = (state, action) => {
       return {
         ...state,
         token: action.payload,
+      };
+    case "SET_ROUTES":
+      return {
+        ...state,
+        routes: action.payload,
       };
     default:
       return state;
