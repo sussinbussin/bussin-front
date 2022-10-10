@@ -23,6 +23,7 @@
       "infoPList": {
         "NSFaceIDUsageDescription": "Log In with FaceID"
       }
+
     },
     "android": {
       "adaptiveIcon": {
