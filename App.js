@@ -20,7 +20,6 @@ import RegisterName from "./views/RegisterName";
 import Profile from "./views/Profile";
 import EditProfile from "./views/EditProfile";
 import Scheduled from "./views/Scheduled";
-import BookingConfirmation from "./views/BookingConfirmation";
 import { useReducer } from "react";
 
 const Stack = createNativeStackNavigator();
@@ -47,7 +46,6 @@ const App = () => {
             <Stack.Screen name = "Profile" component={Profile} />
             <Stack.Screen name = "EditProfile" component={EditProfile} />
             <Stack.Screen name = "Scheduled" component={Scheduled} />
-            <Stack.Screen name = "BookingConfirmation" component={BookingConfirmation} />
           </Stack.Navigator>
         </NavigationContainer>
         <StatusBar></StatusBar>

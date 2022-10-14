@@ -8,7 +8,6 @@ const flags = {
   profile: true,
   editProfile: true,
   requireLogin: false,
-  bookingConfirmation: true,
 };
 
 /**
