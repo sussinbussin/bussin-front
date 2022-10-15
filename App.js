@@ -17,6 +17,7 @@ import TopBar from "./components/TopBar";
 import Home from "./views/Home";
 import Register from "./views/Register";
 import RegisterName from "./views/RegisterName";
+import RegisterEmailNRIC from "./views/RegisterEmailNRIC"
 import Profile from "./views/Profile";
 import EditProfile from "./views/EditProfile";
 import Scheduled from "./views/Scheduled";
@@ -43,6 +44,7 @@ const App = () => {
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Register" component={Register} />
             <Stack.Screen name="RegisterName" component={RegisterName} />
+            <Stack.Screen name = "RegisterEmailNRIC" component={RegisterEmailNRIC} />
             <Stack.Screen name = "Profile" component={Profile} />
             <Stack.Screen name = "EditProfile" component={EditProfile} />
             <Stack.Screen name = "Scheduled" component={Scheduled} />
