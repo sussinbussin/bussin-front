@@ -13,17 +13,21 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useContext, useState } from "react";
 import { GlobalContext } from "../contexts/global";
-import { Alert } from "react-native";
 import { useRegisterUserAPI } from "../api/RegisterUserAPI";
 import { useLoginAPI } from "../api/LoginApi";
+import { useUserAPI } from "../api/UsersAPI";
+import * as SecureStore from "expo-secure-store";
 import TopBar from "../components/TopBar";
 import dayjs from "dayjs";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const RegisterEmailNRIC = ({ navigation, route }) => {
-  const { state } = useContext(GlobalContext);
+  const { state, dispatch } = useContext(GlobalContext);
+  
   if (!state.flags.registerName) return null;
 
+  const username= route.params.username;
+  const password = route.params.password;
   const [name, setName] = useState("");
   const [nric, setNRIC] = useState("");
   const [emailValue, setEmailValue] = useState("");
@@ -33,6 +37,8 @@ const RegisterEmailNRIC = ({ navigation, route }) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const { createUser } = useRegisterUserAPI(userCreationDTO);
+
+  const { loginUser } = useLoginAPI(username, password);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -47,11 +53,9 @@ const RegisterEmailNRIC = ({ navigation, route }) => {
   };
 
   const registerUser = async function () {
-    const usernameValue = route.params.username;
-    const passwordValue = route.params.password;
     const phoneNumValue = route.params.phoneNum;
-    console.log(usernameValue)
-    console.log(passwordValue)
+    console.log(username)
+    console.log(password)
     console.log(phoneNumValue)
     console.log(nric)
     console.log(name)
@@ -59,8 +63,8 @@ const RegisterEmailNRIC = ({ navigation, route }) => {
     console.log(dob)
 
     let userCreationDTO = {
-      "password": passwordValue,
-      "username": usernameValue,
+      "password": password,
+      "username": username,
       "userDTO": {
         "nric": nric,
         "name": name,
@@ -75,13 +79,11 @@ const RegisterEmailNRIC = ({ navigation, route }) => {
 
     await createUser(userCreationDTO)
 
-    let { token, email } = useLoginAPI(usernameValue, passwordValue);
-    if (!token) {
-      console.log("Invalid user");
-      return;
-    }
+    let authNRes = await loginUser();
+    let token = authNRes.authToken;
+    let email = authNRes.email;
 
-    const { getUser } = useUserAPI(token.AuthenticationResult.IdToken, email);
+    const { getUser } = useUserAPI(token, email);
     let user = await getUser();
     if (!user) {
       return;
@@ -99,12 +101,12 @@ const RegisterEmailNRIC = ({ navigation, route }) => {
     });
     dispatch({
       type: "SET_TOKEN",
-      payload: token.AuthenticationResult.IdToken,
+      payload: token,
     });
 
     await SecureStore.setItemAsync(
       "idToken",
-      JSON.stringify(token.AuthenticationResult.IdToken)
+      JSON.stringify(token)
     );
     navigation.navigate("Home");
   };
