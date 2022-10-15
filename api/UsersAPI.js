@@ -13,6 +13,7 @@ const useUserAPI = (token, email) => {
   const getUser = async () => {
     let data = null;
     try {
+      console.log("Logging in with " + email)
       const res = await api.get(`users/byEmail/${email}`);
       data = await res.json();
       console.log(data);

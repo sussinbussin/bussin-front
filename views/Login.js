@@ -78,14 +78,16 @@ const Login = ({ navigation }) => {
       return;
     }
 
-    let { token, email } = await loginUser();
+    let authNRes = await loginUser();
+    let token = authNRes.authToken;
+    let email = authNRes.email;
     if (!token) {
       //handle invalid user
       console.log("Invalid user");
       return;
     }
 
-    const { getUser } = useUserAPI(token.AuthenticationResult.IdToken, email);
+    const { getUser } = useUserAPI(token, email);
     let user = await getUser();
     if (!user) {
       //this one hong gan lo
@@ -104,12 +106,12 @@ const Login = ({ navigation }) => {
     });
     dispatch({
       type: "SET_TOKEN",
-      payload: token.AuthenticationResult.IdToken,
+      payload: token,
     });
 
     await SecureStore.setItemAsync(
       "idToken",
-      JSON.stringify(token.AuthenticationResult.IdToken)
+      JSON.stringify(token)
     );
     navigation.navigate("Home");
   };

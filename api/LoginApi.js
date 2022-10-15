@@ -1,44 +1,48 @@
-import { COGNITO_ENDPOINT, COGNITO_CLIENTID } from "@env";
-import ky from "ky";
+import {CognitoUser, AuthenticationDetails} from 'amazon-cognito-identity-js';
+import { useState } from "react";
+import { cognitoPool } from "./CognitoPool";
 import jwtDecode from "jwt-decode";
 
-const api = ky.create({
-  prefixUrl: COGNITO_ENDPOINT,
-});
-
-/*
- * We are doing it this way because we to conform it to a hook
- * syong yue teach me one i like it this way albeit abit mafan
- * */
 const useLoginAPI = (username, password) => {
+  const [token, setToken] = useState("");
+
   const loginUser = async () => {
-    let token = null;
     let error = false;
     try {
-      const res = await api.post("", {
-        json: {
-          AuthParameters: {
-            USERNAME: username,
-            PASSWORD: password,
-          },
-          AuthFlow: "USER_PASSWORD_AUTH",
-          ClientId: COGNITO_CLIENTID,
-        },
-        headers: {
-          "X-Amz-Target": "AWSCognitoIdentityProviderService.InitiateAuth",
-          "Content-Type": "application/x-amz-json-1.1",
-        },
+      const user = new CognitoUser({
+        Username: username,
+        Pool: cognitoPool,
       });
-      token = await res.json();
-      console.log(token);
-      //TODO: data validation and error handling
-      //this is dumb
-      let authToken = token.AuthenticationResult.IdToken;
-      let decodeToken = jwtDecode(authToken);
-      let email = decodeToken.email;
+  
+      const authDetails = new AuthenticationDetails({
+        Username: username,
+        Password: password,
+      });
 
-      return { token, email };
+      user.authenticateUser(authDetails, {
+        onSuccess: async res => {
+          setToken(res);
+        },
+  
+        onFailure: err => {
+          console.log(err);
+          switch (err.name) {
+            case 'UserNotConfirmedException':
+              return Alert.alert(General.Error, Auth.UserNotConfirmed);
+            case 'NotAuthorizedException':
+              return Alert.alert(General.Error, Auth.IncorrectCredentials);
+            default:
+              return Alert.alert(General.Error, General.SomethingWentWrong);
+          }
+        }
+      });
+      console.log(token)
+      let authToken = token.idToken.jwtToken;
+      let email = token.idToken.payload.email;
+
+      return { authToken, email };
     } catch (error) {
+      console.log(error)
       return;
     }
   };
