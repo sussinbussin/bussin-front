@@ -15,14 +15,14 @@ import { useContext, useEffect, useState } from "react";
 import { StyleSheet, Keyboard } from "react-native";
 import { GlobalContext } from "../contexts/global";
 import dayjs from "dayjs";
-import { usePlannedRouteAPI } from "../api/PlannedRouteAPI";
 import { useRecommenderAPI } from "../api/RouteRecommender";
+import { useDriverApi } from "../api/DriverApi";
+
 const PickupSearch = () => {
   const { state, dispatch } = useContext(GlobalContext);
   const [keyboardStatus, setKeyboardStatus] = useState(false);
   const [date, setDate] = useState(new Date());
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-
   useEffect(() => {
     const keyShowSubscription = Keyboard.addListener("keyboardWillShow", () => {
       setKeyboardStatus(true);
@@ -91,6 +91,7 @@ const PickupSearch = () => {
     //  `${state.dest.geo.lat},${state.dest.geo.lng}`
     //);
     const { recommend } = useRecommenderAPI();
+    const { getDriver } = useDriverApi(state.token);
     const result = await recommend({
       originLat: state.pickup.geo.lat,
       originLng: state.pickup.geo.lng,
@@ -101,6 +102,15 @@ const PickupSearch = () => {
 
     if (!result) return;
     let routes = result["Recommended Driver Routes"];
+    //append driver information to the routes
+    for (let item of routes) {
+      console.log(item);
+      let driverInfo = await getDriver(item.carPlate);
+      console.log(driverInfo);
+      if (driverInfo == null) return;
+
+      item.driver = driverInfo;
+    }
     dispatch({
       type: "SET_ROUTES",
       payload: routes,
@@ -203,7 +213,7 @@ const PickupSearch = () => {
           isDisabled={isBookDisabled()}
           onPress={handleBook}
         >
-          Book
+          Search
         </Button>
       </VStack>
     </Box>

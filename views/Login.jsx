@@ -16,6 +16,7 @@ import { useLoginAPI } from "../api/LoginApi";
 import { useUserAPI } from "../api/UsersAPI";
 import * as SecureStore from "expo-secure-store";
 import * as LocalAuthentication from "expo-local-authentication";
+import { useToast } from "native-base";
 import jwtDecode from "jwt-decode";
 
 const Login = ({ navigation }) => {
@@ -29,7 +30,7 @@ const Login = ({ navigation }) => {
   const { loginUser } = useLoginAPI(username, password);
   const handlePassword = (value) => setPassword(value);
   const handleUsername = (value) => setUsername(value);
-
+  const toast = useToast();
   //check for biometrics
   useEffect(() => {
     if (!state.biometrics) return;
@@ -78,7 +79,10 @@ const Login = ({ navigation }) => {
     let { token, email } = await loginUser();
     if (!token) {
       //handle invalid user
+      setPassword("");
+      setUsername("");
       console.log("Invalid user");
+      //TODO: create toast
       return;
     }
 
@@ -132,6 +136,7 @@ const Login = ({ navigation }) => {
               Username
             </FormControl.Label>
             <Input
+              value={username}
               type="text"
               placeholder="Username"
               onChangeText={handleUsername}
@@ -140,6 +145,7 @@ const Login = ({ navigation }) => {
             />
             <FormControl.Label>Password</FormControl.Label>
             <Input
+              value={password}
               type="password"
               placeholder="Password"
               onChangeText={handlePassword}

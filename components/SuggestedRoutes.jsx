@@ -2,12 +2,19 @@ import { Box, Heading, Text, Button } from "native-base";
 import { Dimensions, StyleSheet } from "react-native";
 import { GlobalContext } from "../contexts/global";
 import { useContext, useEffect } from "react";
-import { Carousel } from "react-native-snap-carousel";
+import { Carousel, Pagination } from "react-native-snap-carousel";
+import {useState} from 'react';
+import { useDriverApi } from "../api/DriverApi";
+
 const SuggestedRoutes = () => {
   const {state, dispatch} = useContext(GlobalContext);
   const {height, width} = Dimensions.get("screen");
+  const { getDriver } = useDriverApi();
+  const [currentIndex, setCurrentIndex] = useState(0);
 
+  //TODO: implement get req from driver +  skeleton
   const renderSuggestions = ({item, index}) => {
+    
     return <Box style={styles.box}>
       <Heading>{item.carPlate}</Heading>
       <Text fontSize="md">Capacity: {item.capacity}</Text>
