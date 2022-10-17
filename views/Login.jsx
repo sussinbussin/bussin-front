@@ -37,15 +37,12 @@ const Login = ({ navigation }) => {
     (async () => {
       //check if supported
       const compat = await LocalAuthentication.hasHardwareAsync();
-      console.log(compat);
       if (!compat) return;
       const enrolled = await LocalAuthentication.isEnrolledAsync();
-      console.log(enrolled);
       if (!enrolled) return;
       //check if user logged in
       let token = await SecureStore.getItemAsync("idToken");
       token = JSON.parse(token);
-      console.log(token);
       if (!token) return;
 
       const check = await LocalAuthentication.authenticateAsync();
