@@ -13,7 +13,7 @@ const api = ky.create({
 const useLoginAPI = (username, password) => {
   const loginUser = async () => {
     let token = null;
-    let error = false;
+    let email = null;
     try {
       const res = await api.post("", {
         json: {
@@ -35,10 +35,11 @@ const useLoginAPI = (username, password) => {
       //this is dumb
       let authToken = token.AuthenticationResult.IdToken;
       let decodeToken = jwtDecode(authToken);
-      let email = decodeToken.email;
+      email = decodeToken.email;
 
       return { token, email };
     } catch (error) {
+      return { token, email };
       return;
     }
   };
