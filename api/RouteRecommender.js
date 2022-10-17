@@ -15,7 +15,7 @@ const useRecommenderAPI = () => {
           "Origin Longitude": coords.originLng,
           "Destination Latitude": coords.destLat,
           "Destination Longitude": coords.destLng,
-          "Departure Time": coords.time,
+          //"Departure Time": coords.time,
         },
       });
       data = await res.json();

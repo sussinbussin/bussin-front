@@ -102,15 +102,6 @@ const PickupSearch = () => {
 
     if (!result) return;
     let routes = result["Recommended Driver Routes"];
-    //append driver information to the routes
-    for (let item of routes) {
-      console.log(item);
-      let driverInfo = await getDriver(item.carPlate);
-      console.log(driverInfo);
-      if (driverInfo == null) return;
-
-      item.driver = driverInfo;
-    }
     dispatch({
       type: "SET_ROUTES",
       payload: routes,
