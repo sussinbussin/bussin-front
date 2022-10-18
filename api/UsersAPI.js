@@ -22,7 +22,21 @@ const useUserAPI = (token, email) => {
     }
   };
 
-  return { getUser };
+  const updateUser = async(userId, userDTO) => {
+    let data = null;
+    try {
+      const res = await api.put(`users/${userId}`, {
+        json: userDTO
+      });
+      data = await res.json();
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+  }
+  return { getUser, updateUser };
 };
 
 export { useUserAPI };
