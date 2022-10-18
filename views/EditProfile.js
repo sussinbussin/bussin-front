@@ -65,7 +65,54 @@ const EditProfile = ({ navigate, route }) => {
   if (!rendered) {
     renderDefaults();
   }
+  const submit = async () => {
+    // check if valid phone number
+    const phoneIsValid =
+      mobile.length === 8 &&
+      (mobile.toString().indexOf("8") === 0 ||
+        mobile.toString().indexOf("9") === 0);
 
+    // check email validity
+    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    const emailIsValid = emailRegex.test(email);
+
+    // TODO: check name & address valid?
+
+    // change text colors if anything is invalid
+    if (!phoneIsValid) {
+      setPhoneColor("red.500");
+    } else {
+      setPhoneColor("white");
+    }
+
+    if (!emailIsValid) {
+      setEmailColor("red.500");
+    } else {
+      setEmailColor("white");
+    }
+
+    // if all valid, proceed to Put request
+    if (phoneIsValid && emailIsValid) {
+      let userDTO = { id, nric, name, address, dob, mobile, email, isDriver };
+
+      // i hardcoded token for this one when trying idk if it works
+      let token = await SecureStore.getItemAsync("idToken");
+      const decodedToken = jwtDecode(token);
+
+      let user = await useUserAPI(token, decodedToken.email).updateUser(
+        id,
+        userDTO
+      );
+
+      // if user...
+      if (user) {
+        console.log("put works");
+        setButtonMessage("Profile updated!");
+      } else {
+        console.log("rip put doesn't work");
+      }
+    }
+  };
 
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
@@ -128,6 +175,7 @@ const EditProfile = ({ navigate, route }) => {
           />
 
           <Button
+            onPress={submit}
             w="100%"
             style={{ marginTop: 25 }}
             variant="outline"
