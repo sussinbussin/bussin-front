@@ -12,20 +12,39 @@ import {
   Flex,
 } from "native-base";
 import { TouchableHighlight, Image } from "react-native";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import TopBarBack from "../components/TopBarBack";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { GlobalContext } from "../contexts/global";
 import { useNavigation } from "@react-navigation/native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useUserAPI } from "../api/UsersAPI";
+import * as SecureStore from "expo-secure-store";
+import jwtDecode from "jwt-decode";
 
 const Profile = () => {
   const { state } = useContext(GlobalContext);
   if (!state.flags.profile) return null;
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
-  const [name, setName] = useState("Jolene");
+
+  const [rendered, setRendered] = useState(false);
+  const [name, setName] = useState("");
+
+  const renderDefaults = async () => {
+    let token = await SecureStore.getItemAsync("idToken");
+    const decodedToken = jwtDecode(token);
+    const { getUser } = useUserAPI(token, decodedToken.email);
+
+
+    let user = await getUser();
+    setName(user.name);
+    setRendered(true);
+  };
+  if (!rendered) {
+    renderDefaults();
+  }
 
   return (
     <View>
