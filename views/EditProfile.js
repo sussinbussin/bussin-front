@@ -18,37 +18,54 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { GlobalContext } from "../contexts/global";
 import { useNavigation } from "@react-navigation/native";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { RegisterName } from "./RegisterName";
+import { useUserAPI } from "../api/UsersAPI";
+import * as SecureStore from "expo-secure-store";
+import jwtDecode from "jwt-decode";
 
-// function ManageUsername({ navigation }) {
-//     const usernameContext = useContext(RegisterName);
-
-//     // const editedUsername = ???? need route or smth is it
-// };
-
-const EditProfile = ({navigate, route}) => {
+const EditProfile = ({ navigate, route }) => {
   const { state } = useContext(GlobalContext);
   if (!state.flags.editProfile) return null;
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
 
-  // idk how to call from db or something?
-  const [name, setName] = useState(route.params.name);
-  const [number, setNumber] = useState("88888888");
-  const [email, setEmail] = useState("jolene@gmail.com");
+  const [rendered, setRendered] = useState(false);
 
-  const handleName = (newName) => setName(newName);
-  const submit = () => {
-    // TODO: save updated details????
-    console.log(name);
+  const [id, setId] = useState("");
+  const [name, setName] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [email, setEmail] = useState("");
+  const [nric, setNric] = useState("");
+  const [address, setAddress] = useState("");
+  const [dob, setDob] = useState("");
+  const [isDriver, setDriver] = useState(false);
 
-    // TODO: save updated name / details in db, reflect in profile
-    navigation.navigate("Profile", {name:name});
-    return name;
+  // to show user when their input is wrong / successful etc
+  const [phoneColor, setPhoneColor] = useState("white");
+  const [emailColor, setEmailColor] = useState("white");
+  const [buttonMessage, setButtonMessage] = useState("Save changes");
+ 
+  const renderDefaults = async () => {
+    let token = await SecureStore.getItemAsync("idToken");
+    const decodedToken = jwtDecode(token);
+    const { getUser } = useUserAPI(token, decodedToken.email);
 
+    let user = await getUser();
+
+    setId(user.id);
+    setName(user.name);
+    setMobile(user.mobile);
+    setEmail(user.email);
+    setNric(user.nric);
+    setAddress(user.address);
+    setDob(user.dob);
+    setDriver(user.isDriver);
+
+    setRendered(true);
   };
-  // TODO: add edit / save button to confirm changes
-  // and update details accordingly???? idk man
+  if (!rendered) {
+    renderDefaults();
+  }
+
 
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
@@ -74,7 +91,7 @@ const EditProfile = ({navigate, route}) => {
           <FormControl.Label>Name</FormControl.Label>
           <Input
             type="text"
-            onChangeText={handleName}
+            onChangeText={setName}
             value={name}
             variant="underlined"
             size="lg"
@@ -83,11 +100,12 @@ const EditProfile = ({navigate, route}) => {
           <Input
             type="text"
             keyboardType="numeric"
-            onChangeText={setNumber}
-            value={number}
+            onChangeText={setMobile}
+            value={mobile}
             maxLength={8}
             variant="underlined"
             size="lg"
+            color={phoneColor}
           />
 
           <FormControl.Label>Email Address</FormControl.Label>
@@ -97,15 +115,24 @@ const EditProfile = ({navigate, route}) => {
             value={email}
             variant="underlined"
             size="lg"
+            color={emailColor}
+          />
+
+          <FormControl.Label>Address</FormControl.Label>
+          <Input
+            type="text"
+            onChangeText={setAddress}
+            value={address}
+            variant="underlined"
+            size="lg"
           />
 
           <Button
-            onPress={submit}
             w="100%"
             style={{ marginTop: 25 }}
             variant="outline"
           >
-            Save changes
+            {buttonMessage}
           </Button>
         </Stack>
       </Box>
