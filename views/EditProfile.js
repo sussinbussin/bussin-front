@@ -18,9 +18,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { GlobalContext } from "../contexts/global";
 import { useNavigation } from "@react-navigation/native";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { useUserAPI } from "../api/UsersAPI";
+import { useUserApi } from "../api/UsersApi";
 import * as SecureStore from "expo-secure-store";
-import jwtDecode from "jwt-decode";
 
 const EditProfile = ({ navigate, route }) => {
   const { state } = useContext(GlobalContext);
@@ -30,12 +29,11 @@ const EditProfile = ({ navigate, route }) => {
 
   const [rendered, setRendered] = useState(false);
 
-  const [id, setId] = useState("");
+  const [uuid, setUuid] = useState("");
   const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
   const [nric, setNric] = useState("");
-  const [address, setAddress] = useState("");
   const [dob, setDob] = useState("");
   const [isDriver, setDriver] = useState(false);
 
@@ -46,17 +44,14 @@ const EditProfile = ({ navigate, route }) => {
  
   const renderDefaults = async () => {
     let token = await SecureStore.getItemAsync("idToken");
-    const decodedToken = jwtDecode(token);
-    const { getUser } = useUserAPI(token, decodedToken.email);
+    let uuid = await SecureStore.getItemAsync("uuid");
+    let user = await useUserApi(token).getFullUserByUuid(uuid);
 
-    let user = await getUser();
-
-    setId(user.id);
+    setUuid(user.id);
     setName(user.name);
     setMobile(user.mobile);
     setEmail(user.email);
     setNric(user.nric);
-    setAddress(user.address);
     setDob(user.dob);
     setDriver(user.isDriver);
 
@@ -65,6 +60,7 @@ const EditProfile = ({ navigate, route }) => {
   if (!rendered) {
     renderDefaults();
   }
+
   const submit = async () => {
     // check if valid phone number
     const phoneIsValid =
@@ -93,16 +89,17 @@ const EditProfile = ({ navigate, route }) => {
 
     // if all valid, proceed to Put request
     if (phoneIsValid && emailIsValid) {
-      let userDTO = { id, nric, name, address, dob, mobile, email, isDriver };
+      let userDTO = { 
+        "nric":nric, 
+        "name": name, 
+        "dob":dob, 
+        "mobile":mobile, 
+        "email":email, 
+        "isDriver":isDriver };
 
-      // i hardcoded token for this one when trying idk if it works
       let token = await SecureStore.getItemAsync("idToken");
-      const decodedToken = jwtDecode(token);
 
-      let user = await useUserAPI(token, decodedToken.email).updateUser(
-        id,
-        userDTO
-      );
+      let user = await useUserApi(token).updateUser(uuid, userDTO);
 
       // if user...
       if (user) {
@@ -163,15 +160,6 @@ const EditProfile = ({ navigate, route }) => {
             variant="underlined"
             size="lg"
             color={emailColor}
-          />
-
-          <FormControl.Label>Address</FormControl.Label>
-          <Input
-            type="text"
-            onChangeText={setAddress}
-            value={address}
-            variant="underlined"
-            size="lg"
           />
 
           <Button

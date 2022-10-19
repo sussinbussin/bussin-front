@@ -12,8 +12,8 @@ import {
 import { useContext, useState, useEffect } from "react";
 import { GlobalContext } from "../contexts/global";
 import TopBar from "../components/TopBar";
-import { useLoginAPI } from "../api/LoginApi";
-import { useUserAPI } from "../api/UsersAPI";
+import { useLoginApi } from "../api/LoginApi";
+import { useUserApi } from "../api/UsersApi";
 import * as SecureStore from "expo-secure-store";
 import * as LocalAuthentication from "expo-local-authentication";
 import { useToast } from "native-base";
@@ -27,7 +27,7 @@ const Login = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const { loginUser } = useLoginAPI(username, password);
+  const { loginUser } = useLoginApi(username, password);
   const handlePassword = (value) => setPassword(value);
   const handleUsername = (value) => setUsername(value);
   const toast = useToast();
@@ -50,7 +50,7 @@ const Login = ({ navigation }) => {
       if (!check.success) return;
 
       const decodedToken = jwtDecode(token);
-      const { getUser } = useUserAPI(token, decodedToken.email);
+      const { getUser } = useUserApi(token, decodedToken.email);
       let user = await getUser();
       if (!user) return;
       dispatch({ type: "SET_USER", payload: user });
@@ -75,43 +75,30 @@ const Login = ({ navigation }) => {
       }
       return;
     }
+    
+    let authNRes = await loginUser();
+    let token = authNRes.authToken;
+    let email = authNRes.email;
 
-    let { token, email } = await loginUser();
     if (!token) {
-      //handle invalid user
-      setPassword("");
-      setUsername("");
       console.log("Invalid user");
-      //TODO: create toast
       return;
     }
 
-    const { getUser } = useUserAPI(token.AuthenticationResult.IdToken, email);
-    let user = await getUser();
+    let user = await useUserApi(token).getUser(email);
     if (!user) {
-      //this one hong gan lo
       return;
     }
-
-    dispatch({ type: "SET_USER", payload: user });
-    dispatch({
-      type: "MODIFY_STAGE",
-      payload: {
-        ...state.stage,
-        locationSearch: {
-          text: `Where to, ${user.name}?`,
-        },
-      },
-    });
-    dispatch({
-      type: "SET_TOKEN",
-      payload: token.AuthenticationResult.IdToken,
-    });
 
     await SecureStore.setItemAsync(
       "idToken",
-      JSON.stringify(token.AuthenticationResult.IdToken)
+      JSON.stringify(token).replace(/['"]+/g, "")
     );
+    await SecureStore.setItemAsync(
+      "uuid",
+      JSON.stringify(user.id).replace(/['"]+/g, '')
+    );
+
     navigation.navigate("Home");
   };
 

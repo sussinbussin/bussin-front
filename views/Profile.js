@@ -19,7 +19,7 @@ import { GlobalContext } from "../contexts/global";
 import { useNavigation } from "@react-navigation/native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useUserAPI } from "../api/UsersAPI";
+import { useUserApi } from "../api/UsersApi";
 import * as SecureStore from "expo-secure-store";
 import jwtDecode from "jwt-decode";
 
