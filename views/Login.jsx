@@ -50,8 +50,8 @@ const Login = ({ navigation }) => {
       if (!check.success) return;
 
       const decodedToken = jwtDecode(token);
-      const { getUser } = useUserApi(token, decodedToken.email);
-      let user = await getUser();
+      const { getUser } = useUserApi(token);
+      let user = await getUser(decodedToken.email);
       if (!user) return;
       dispatch({ type: "SET_USER", payload: user });
       dispatch({
