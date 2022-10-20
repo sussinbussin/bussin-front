@@ -35,10 +35,9 @@ const Profile = () => {
   const renderDefaults = async () => {
     let token = await SecureStore.getItemAsync("idToken");
     const decodedToken = jwtDecode(token);
-    const { getUser } = useUserAPI(token, decodedToken.email);
+    const { getUser } = useUserAPI(token);
 
-
-    let user = await getUser();
+    let user = await getUser(decodedToken.email);
     setName(user.name);
     setRendered(true);
   };
@@ -111,6 +110,7 @@ const Profile = () => {
           <View style={{ width: "100%" }}>
             <Pressable
               onPress={() => {
+                navigation.navigate("Scheduled");
                 console.log("scheduled");
               }}
               flexDirection="row"
