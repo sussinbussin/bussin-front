@@ -20,6 +20,7 @@ import RegisterName from "./views/RegisterName";
 import Profile from "./views/Profile";
 import EditProfile from "./views/EditProfile";
 import Scheduled from "./views/Scheduled";
+import RegisterNew from "./views/RegisterNew";
 import { useReducer } from "react";
 
 const Stack = createNativeStackNavigator();
@@ -36,16 +37,17 @@ const App = () => {
           <Stack.Navigator
             screenOptions={{
               headerShown: false,
-              gestureEnabled:false
+              gestureEnabled: false,
             }}
           >
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="RegisterNew" component={RegisterNew} />
             <Stack.Screen name="Register" component={Register} />
             <Stack.Screen name="RegisterName" component={RegisterName} />
-            <Stack.Screen name = "Profile" component={Profile} />
-            <Stack.Screen name = "EditProfile" component={EditProfile} />
-            <Stack.Screen name = "Scheduled" component={Scheduled} />
+            <Stack.Screen name="Profile" component={Profile} />
+            <Stack.Screen name="EditProfile" component={EditProfile} />
+            <Stack.Screen name="Scheduled" component={Scheduled} />
           </Stack.Navigator>
         </NavigationContainer>
         <StatusBar></StatusBar>
