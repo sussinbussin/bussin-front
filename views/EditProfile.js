@@ -18,37 +18,98 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { GlobalContext } from "../contexts/global";
 import { useNavigation } from "@react-navigation/native";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { RegisterName } from "./RegisterName";
+import { useUserApi } from "../api/UsersApi";
+import * as SecureStore from "expo-secure-store";
 
-// function ManageUsername({ navigation }) {
-//     const usernameContext = useContext(RegisterName);
-
-//     // const editedUsername = ???? need route or smth is it
-// };
-
-const EditProfile = ({navigate, route}) => {
+const EditProfile = ({ navigate, route }) => {
   const { state } = useContext(GlobalContext);
   if (!state.flags.editProfile) return null;
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
 
-  // idk how to call from db or something?
-  const [name, setName] = useState(route.params.name);
-  const [number, setNumber] = useState("88888888");
-  const [email, setEmail] = useState("jolene@gmail.com");
+  const [rendered, setRendered] = useState(false);
 
-  const handleName = (newName) => setName(newName);
-  const submit = () => {
-    // TODO: save updated details????
-    console.log(name);
+  const [uuid, setUuid] = useState("");
+  const [name, setName] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [email, setEmail] = useState("");
+  const [nric, setNric] = useState("");
+  const [dob, setDob] = useState("");
+  const [isDriver, setDriver] = useState(false);
 
-    // TODO: save updated name / details in db, reflect in profile
-    navigation.navigate("Profile", {name:name});
-    return name;
+  // to show user when their input is wrong / successful etc
+  const [phoneColor, setPhoneColor] = useState("white");
+  const [emailColor, setEmailColor] = useState("white");
+  const [buttonMessage, setButtonMessage] = useState("Save changes");
+ 
+  const renderDefaults = async () => {
+    let token = await SecureStore.getItemAsync("idToken");
+    let uuid = await SecureStore.getItemAsync("uuid");
+    let user = await useUserApi(token).getFullUserByUuid(uuid);
 
+    setUuid(user.id);
+    setName(user.name);
+    setMobile(user.mobile);
+    setEmail(user.email);
+    setNric(user.nric);
+    setDob(user.dob);
+    setDriver(user.isDriver);
+
+    setRendered(true);
   };
-  // TODO: add edit / save button to confirm changes
-  // and update details accordingly???? idk man
+  if (!rendered) {
+    renderDefaults();
+  }
+
+  const submit = async () => {
+    // check if valid phone number
+    const phoneIsValid =
+      mobile.length === 8 &&
+      (mobile.toString().indexOf("8") === 0 ||
+        mobile.toString().indexOf("9") === 0);
+
+    // check email validity
+    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    const emailIsValid = emailRegex.test(email);
+
+    // TODO: check name & address valid?
+
+    // change text colors if anything is invalid
+    if (!phoneIsValid) {
+      setPhoneColor("red.500");
+    } else {
+      setPhoneColor("white");
+    }
+
+    if (!emailIsValid) {
+      setEmailColor("red.500");
+    } else {
+      setEmailColor("white");
+    }
+
+    // if all valid, proceed to Put request
+    if (phoneIsValid && emailIsValid) {
+      let userDTO = { 
+        "nric":nric, 
+        "name": name, 
+        "dob":dob, 
+        "mobile":mobile, 
+        "email":email, 
+        "isDriver":isDriver };
+
+      let token = await SecureStore.getItemAsync("idToken");
+
+      let user = await useUserApi(token).updateUser(uuid, userDTO);
+
+      // if user...
+      if (user) {
+        console.log("put works");
+        setButtonMessage("Profile updated!");
+      } else {
+        console.log("rip put doesn't work");
+      }
+    }
+  };
 
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
@@ -74,7 +135,7 @@ const EditProfile = ({navigate, route}) => {
           <FormControl.Label>Name</FormControl.Label>
           <Input
             type="text"
-            onChangeText={handleName}
+            onChangeText={setName}
             value={name}
             variant="underlined"
             size="lg"
@@ -83,11 +144,12 @@ const EditProfile = ({navigate, route}) => {
           <Input
             type="text"
             keyboardType="numeric"
-            onChangeText={setNumber}
-            value={number}
+            onChangeText={setMobile}
+            value={mobile}
             maxLength={8}
             variant="underlined"
             size="lg"
+            color={phoneColor}
           />
 
           <FormControl.Label>Email Address</FormControl.Label>
@@ -97,6 +159,7 @@ const EditProfile = ({navigate, route}) => {
             value={email}
             variant="underlined"
             size="lg"
+            color={emailColor}
           />
 
           <Button
@@ -105,7 +168,7 @@ const EditProfile = ({navigate, route}) => {
             style={{ marginTop: 25 }}
             variant="outline"
           >
-            Save changes
+            {buttonMessage}
           </Button>
         </Stack>
       </Box>

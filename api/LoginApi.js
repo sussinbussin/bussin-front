@@ -6,15 +6,13 @@ const api = ky.create({
   prefixUrl: COGNITO_ENDPOINT,
 });
 
-/*
- * We are doing it this way because we to conform it to a hook
- * syong yue teach me one i like it this way albeit abit mafan
- * */
-const useLoginAPI = (username, password) => {
+const useLoginApi = (username, password) => {
   const loginUser = async () => {
     let token = null;
-    let email = null;
+    let error = false;
     try {
+      console.log(username + password);
+      console.log(JSON.stringify(api))
       const res = await api.post("", {
         json: {
           AuthParameters: {
@@ -30,20 +28,19 @@ const useLoginAPI = (username, password) => {
         },
       });
       token = await res.json();
-      console.log(token);
-      //TODO: data validation and error handling
-      //this is dumb
+
       let authToken = token.AuthenticationResult.IdToken;
       let decodeToken = jwtDecode(authToken);
-      email = decodeToken.email;
+      let email = decodeToken.email;
 
-      return { token, email };
+      console.log(email)
+      return { authToken, email };
     } catch (error) {
-      return { token, email };
+      console.log(error);
       return;
     }
   };
   return { loginUser };
 };
 
-export { useLoginAPI };
+export { useLoginApi };
