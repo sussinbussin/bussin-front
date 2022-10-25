@@ -32,6 +32,7 @@ const Home = ({ navigation }) => {
   const { width, height } = Dimensions.get("window");
   const [location, setLocation] = useState();
   const map = useRef();
+
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();

@@ -30,10 +30,6 @@ const initialState = {
       text: "Where to?",
     },
   },
-  camera: {
-    lat: 0,
-    lng: 0,
-  },
   dest: {
     item: null,
     geo: null,
@@ -42,6 +38,7 @@ const initialState = {
     item: null,
     geo: null,
   },
+  selectedRoute: null,
   token: null,
   user: null,
   biometrics: true,
@@ -65,11 +62,6 @@ const globalReducer = (state, action) => {
         ...state,
         pickup: { ...action.payload },
       };
-    case "ADJUST_CAMERA":
-      return {
-        ...state,
-        camera: action.payload,
-      };
     case "SET_USER":
       return {
         ...state,
@@ -84,6 +76,11 @@ const globalReducer = (state, action) => {
       return {
         ...state,
         routes: action.payload,
+      };
+    case "SET_MAP":
+      return {
+        ...state,
+        selectedRoute: action.payload,
       };
     default:
       return state;

@@ -9,6 +9,7 @@ import {
   Divider,
   Button,
   Select,
+  Spinner,
 } from "native-base";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useContext, useEffect, useState } from "react";
@@ -16,13 +17,13 @@ import { StyleSheet, Keyboard } from "react-native";
 import { GlobalContext } from "../contexts/global";
 import dayjs from "dayjs";
 import { useRecommenderAPI } from "../api/RouteRecommender";
-import { useDriverApi } from "../api/DriverApi";
 
 const PickupSearch = () => {
   const { state, dispatch } = useContext(GlobalContext);
   const [keyboardStatus, setKeyboardStatus] = useState(false);
   const [date, setDate] = useState(new Date());
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   useEffect(() => {
     const keyShowSubscription = Keyboard.addListener("keyboardWillShow", () => {
       setKeyboardStatus(true);
@@ -85,21 +86,18 @@ const PickupSearch = () => {
    * Booking
    * */
   const handleBook = async () => {
-    //const { getSuggestion } = usePlannedRouteAPI(state.token);
-    //const result = await getSuggestion(
-    //  `${state.pickup.geo.lat},${state.pickup.geo.lng}`,
-    //  `${state.dest.geo.lat},${state.dest.geo.lng}`
-    //);
+    setLoading(true);
+
     const { recommend } = useRecommenderAPI();
-    const { getDriver } = useDriverApi(state.token);
     const result = await recommend({
       originLat: state.pickup.geo.lat,
       originLng: state.pickup.geo.lng,
       destLat: state.dest.geo.lat,
       destLng: state.dest.geo.lng,
-      time: "2022/10/06 07:30:00",
+      //time: "2022/10/06 07:30:00",
     });
 
+    console.log(result);
     if (!result) return;
     let routes = result["Recommended Driver Routes"];
     dispatch({
@@ -193,19 +191,23 @@ const PickupSearch = () => {
           onConfirm={handleDateTimeSelect}
           onCancel={hideDateTimePicker}
         />
-        <Button
-          style={{
-            marginTop: 10,
-          }}
-          _text={{
-            fontSize: "md",
-          }}
-          variant="outline"
-          isDisabled={isBookDisabled()}
-          onPress={handleBook}
-        >
-          Search
-        </Button>
+
+        {!isLoading && (
+          <Button
+            style={{
+              marginTop: 10,
+            }}
+            _text={{
+              fontSize: "md",
+            }}
+            variant="outline"
+            isDisabled={isBookDisabled()}
+            onPress={handleBook}
+          >
+            Search
+          </Button>
+        )}
+        {isLoading && <Spinner></Spinner>}
       </VStack>
     </Box>
   );
