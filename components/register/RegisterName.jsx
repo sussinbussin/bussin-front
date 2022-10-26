@@ -1,7 +1,7 @@
 import { Heading, View, Input, Text, Button } from "native-base";
 import { useContext, useEffect, useRef, useState } from "react";
 import Lottie from "lottie-react-native";
-import TopBar from "../TopBar";
+import TopBarBack from "../TopBarBack";
 import { RegisterContext } from "../../contexts/register";
 
 const RegisterName = ({ navigation }) => {
@@ -32,7 +32,7 @@ const RegisterName = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
-      <TopBar />
+      <TopBarBack />
       <Lottie
         source={require("../../assets/location.json")}
         ref={lottieRef}

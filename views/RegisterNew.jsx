@@ -12,18 +12,16 @@ const RegisterNew = ({ navigation }) => {
 
   return (
     <RegisterContext.Provider value={initialState}>
-      <NavigationContainer independent>
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
-          }}
-        >
-          <Stack.Screen name="RegisterName" component={RegisterName} />
-          <Stack.Screen name="RegisterDetails" component={RegisterDetails} />
-          <Stack.Screen name="RegisterPassword" component={RegisterPassword} />
-          <Stack.Screen name="RegisterComplete" component={RegisterComplete} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Screen name="RegisterName" component={RegisterName} />
+        <Stack.Screen name="RegisterDetails" component={RegisterDetails} />
+        <Stack.Screen name="RegisterPassword" component={RegisterPassword} />
+        <Stack.Screen name="RegisterComplete" component={RegisterComplete} />
+      </Stack.Navigator>
     </RegisterContext.Provider>
   );
 };

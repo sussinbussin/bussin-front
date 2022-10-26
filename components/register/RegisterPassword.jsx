@@ -1,13 +1,22 @@
 import { Heading, View, Text, Input, Stack, Button } from "native-base";
-import TopBar from "../TopBar";
+import TopBarBack from "../TopBarBack";
 
 const RegisterPassword = ({ navigation }) => {
+  const [password1, setPassword1] = useState();
+  const [password2, setPassword2] = useState();
+
   const handleNext = () => {
+    //TODO: handle invalid passwords properly with error messages
+    if (password1 !== password2) {
+      setPassword1("");
+      setPassword2("");
+      return;
+    }
     navigation.navigate("RegisterComplete");
   };
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
-      <TopBar></TopBar>
+      <TopBarBack></TopBarBack>
       <Heading
         style={{
           alignSelf: "flex-start",
@@ -36,6 +45,8 @@ const RegisterPassword = ({ navigation }) => {
           style={{
             paddingTop: 20,
           }}
+          value={password1}
+          onChangeText={(event) => setPassword1(event)}
           variant="underlined"
           type="password"
           size="lg"
@@ -45,6 +56,8 @@ const RegisterPassword = ({ navigation }) => {
           style={{
             paddingTop: 20,
           }}
+          value={password2}
+          onChangeText={(event) => setPassword2(event)}
           variant="underlined"
           type="password"
           size="lg"

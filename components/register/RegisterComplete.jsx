@@ -1,9 +1,9 @@
-import { View, Heading, Button, Input } from "native-base";
+import { View, Heading, Text } from "native-base";
 import Lottie from "lottie-react-native";
 import TopBar from "../TopBar";
 import { useEffect, useRef, Animated } from "react";
 
-const RegisterComplete = () => {
+const RegisterComplete = ({ navigation }) => {
   const animation = useRef();
   const heading = useRef();
 
@@ -11,7 +11,9 @@ const RegisterComplete = () => {
     animation.current?.play();
   }, []);
 
-  const handleAnimationFinish = () => {};
+  const handleAnimationFinish = () => {
+    navigation.navigate("Home");
+  };
 
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
@@ -21,9 +23,11 @@ const RegisterComplete = () => {
         source={require("../../assets/success.json")}
         loop={false}
         style={{ width: 300 }}
+        speed="0.8"
         onAnimationFinish={handleAnimationFinish}
       />
-      <Heading>Registration Complete!</Heading>
+      <Heading>Success!</Heading>
+      <Text></Text>
     </View>
   );
 };

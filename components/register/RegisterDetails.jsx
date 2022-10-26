@@ -9,18 +9,24 @@ import {
 } from "native-base";
 import { useContext } from "react";
 import { RegisterContext } from "../../contexts/register";
-import TopBar from "../TopBar";
+import TopBarBack from "../TopBarBack";
 
 const RegisterDetails = ({ navigation }) => {
   const state = useContext(RegisterContext);
+  const [email, setEmail] = useState("");
+  const [nric, setNric] = useState("");
+  const [mobile, setMobile] = useState("");
 
   const handleNext = () => {
+    state.nric = nric;
+    state.email = email;
+    state.mobile = mobile;
     navigation.navigate("RegisterPassword");
   };
 
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
-      <TopBar></TopBar>
+      <TopBarBack></TopBarBack>
       <Heading
         style={{
           alignSelf: "flex-start",
@@ -48,15 +54,31 @@ const RegisterDetails = ({ navigation }) => {
         <FormControl.Label style={{ alignItems: "center" }}>
           Email
         </FormControl.Label>
-        <Input variant="underlined" size="lg" placeholder="jomeme@gmail.com" />
+        <Input
+          value={email}
+          onChangeText={(event) => setEmail(event)}
+          variant="underlined"
+          size="lg"
+          placeholder="jomeme@gmail.com"
+        />
         <FormControl.Label style={{ alignItems: "center" }}>
           NRIC
         </FormControl.Label>
-        <Input variant="underlined" size="lg" placeholder="S6969696Z" />
+        <Input
+          value={nric}
+          variant="underlined"
+          size="lg"
+          placeholder="S6969696Z"
+        />
         <FormControl.Label style={{ alignItems: "center" }}>
           Mobile
         </FormControl.Label>
-        <Input variant="underlined" size="lg" placeholder="99696969" />
+        <Input
+          value={mobile}
+          variant="underlined"
+          size="lg"
+          placeholder="99696969"
+        />
 
         <Button
           variant="outline"
