@@ -1,17 +1,21 @@
 import { Heading, View, Text, Input, Stack, Button } from "native-base";
 import TopBarBack from "../TopBarBack";
-
+import { useState, useContext } from "react";
+import { RegisterContext } from "../../contexts/register";
 const RegisterPassword = ({ navigation }) => {
-  const [password1, setPassword1] = useState();
-  const [password2, setPassword2] = useState();
+  const [password1, setPassword1] = useState("");
+  const [password2, setPassword2] = useState("");
+  const state = useContext(RegisterContext);
 
   const handleNext = () => {
     //TODO: handle invalid passwords properly with error messages
+    if (password1.length == 0) return;
     if (password1 !== password2) {
       setPassword1("");
       setPassword2("");
       return;
     }
+    state.password = password1;
     navigation.navigate("RegisterComplete");
   };
   return (

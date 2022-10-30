@@ -63,13 +63,21 @@ const LocationSearch = () => {
     setSearch(event);
   };
 
+  /*
+   * Handle creation of markers for pickup and destination
+   * */
+  const handleMarkerCreation = async () => {
+    let payload = [];
+
+    if (state.dest.geo) payload.push(state.dest.geo);
+    if (state.pickup.geo) payload.push(state.pickup.geo);
+
+    return payload;
+  };
+
   const handleSetDestination = async (item) => {
     const { getGeometry } = usePlacesAPI(item.place_id);
     let geog = await getGeometry();
-    //console.log(state.stage.level);
-    //console.log(geog);
-
-    //console.log(item);
     let payload = {};
 
     /**
@@ -83,6 +91,7 @@ const LocationSearch = () => {
           text: "Search for pickup point.",
         },
       };
+
       dispatch({
         type: "SET_DESTINATION",
         payload: {
@@ -90,6 +99,11 @@ const LocationSearch = () => {
           item: item,
           geo: geog,
         },
+      });
+
+      dispatch({
+        type: "SET_CAMERA",
+        payload: geog,
       });
     }
     if (state.stage.level == "CHOOSING_PICKUP") {
@@ -105,12 +119,12 @@ const LocationSearch = () => {
         },
       });
     }
-    //console.log(state);
-    dispatch({ type: "MODIFY_STAGE", payload: payload });
+
     Keyboard.dismiss();
-    //setDestination(item);
-    //search(item.structured_formatting.main_text);
     setSuggestions("");
+
+
+    dispatch({ type: "MODIFY_STAGE", payload: payload });
   };
 
   const generateSuggestions = () => {

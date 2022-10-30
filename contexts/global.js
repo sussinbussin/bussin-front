@@ -43,7 +43,10 @@ const initialState = {
   user: null,
   biometrics: true,
   routes: null,
+  camera: null,
+  markers: []
 };
+
 const initState = () => initialState;
 const globalReducer = (state, action) => {
   switch (action.type) {
@@ -77,10 +80,21 @@ const globalReducer = (state, action) => {
         ...state,
         routes: action.payload,
       };
+    //sets the arguments for the map view directions
     case "SET_MAP":
       return {
         ...state,
         selectedRoute: action.payload,
+      };
+    case "SET_CAMERA":
+      return {
+        ...state,
+        camera: action.payload,
+      };
+    case "SET_MARKERS":
+      return {
+        ...state,
+        markers: action.payload,
       };
     default:
       return state;

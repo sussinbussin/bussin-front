@@ -1,10 +1,10 @@
-import { Box, Heading, Text, Button, View } from "native-base";
+import { Box, Heading, Text, Button, View, HStack } from "native-base";
 import { Dimensions, StyleSheet } from "react-native";
 import { GlobalContext } from "../contexts/global";
 import { useContext, useEffect } from "react";
 import { Carousel, Pagination } from "react-native-snap-carousel";
 import { useState } from "react";
-import { useDriverApi } from "../api/DriverApi";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 const SuggestedRoutes = () => {
   const { state, dispatch } = useContext(GlobalContext);
@@ -26,13 +26,39 @@ const SuggestedRoutes = () => {
         </Box>
       );
     }
+
+    //public transport
     if (item.route) {
       console.log("ROUTES");
       console.log(item);
       return (
         <Box style={styles.box}>
           <Heading>Public Transport</Heading>
-          <Text fontSize="md">{item.cost}</Text>
+          <Text fontSize="md">${item.cost}</Text>
+
+          <HStack>
+            {item.route.map((val, index) => {
+              if (val.transportMode == "walking") {
+                return (
+                  <MaterialIcons
+                    name="directions-walk"
+                    size={24}
+                    color="white"
+                  />
+                );
+              }
+
+              if (val.transportMode == "bus") {
+                return (
+                  <MaterialIcons
+                    name="directions-bus"
+                    size={24}
+                    color="white"
+                  />
+                );
+              }
+            })}
+          </HStack>
         </Box>
       );
     }
@@ -65,6 +91,26 @@ const SuggestedRoutes = () => {
   //TODO: handle change map view
   const handleSnap = (index) => {
     setCurrentIndex(index);
+
+    let payload = [];
+    let route = state.routes[index];
+    // format the lat long properly
+    console.log(state.routes[index]);
+
+    if (route.route) {
+      route.route.map((item) => {
+        payload.push({
+          lat: item.originLatitude,
+          lng: item.originLongitude,
+        });
+        payload.push({
+          lat: item.destLatitude,
+          lng: item.destLongitude
+        });
+      });
+    }
+
+    dispatch({ type: "SET_MARKERS", payload: payload });
   };
   //TODO: handle submit request
   const handleSubmit = () => {};

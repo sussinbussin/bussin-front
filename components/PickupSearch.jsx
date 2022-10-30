@@ -24,6 +24,7 @@ const PickupSearch = () => {
   const [date, setDate] = useState(new Date());
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isLoading, setLoading] = useState(false);
+
   useEffect(() => {
     const keyShowSubscription = Keyboard.addListener("keyboardWillShow", () => {
       setKeyboardStatus(true);
