@@ -14,6 +14,7 @@ const SuggestedRoutes = () => {
   //TODO: implement get req from driver +  skeleton
   const renderSuggestions = ({ item, index }) => {
     if (item.carModel) {
+      console.log(item);
       return (
         <Box style={styles.box}>
           <Heading>{item.driver}</Heading>
@@ -93,6 +94,7 @@ const SuggestedRoutes = () => {
     setCurrentIndex(index);
 
     let payload = [];
+    let mapPayload = [];
     let route = state.routes[index];
     // format the lat long properly
     console.log(state.routes[index]);
@@ -105,12 +107,31 @@ const SuggestedRoutes = () => {
         });
         payload.push({
           lat: item.destLatitude,
-          lng: item.destLongitude
+          lng: item.destLongitude,
+        });
+        mapPayload.push({
+          latitude: item.destLatitude,
+          longitude: item.destLongitude,
         });
       });
     }
 
+    if (route.carPlate) {
+      payload.push({
+        lat: route.originLatitude,
+        lng: route.originLongitude,
+      });
+      payload.push({
+        lat: route.destLatitude,
+        lng: route.destLongitude,
+      });
+    }
+
     dispatch({ type: "SET_MARKERS", payload: payload });
+    dispatch({
+      type: "SET_MAP",
+      payload: mapPayload,
+    });
   };
   //TODO: handle submit request
   const handleSubmit = () => {};
