@@ -9,10 +9,8 @@ const api = ky.create({
 const useLoginApi = (username, password) => {
   const loginUser = async () => {
     let token = null;
-    let error = false;
+    let email = null;
     try {
-      console.log(username + password);
-      console.log(JSON.stringify(api))
       const res = await api.post("", {
         json: {
           AuthParameters: {
@@ -27,17 +25,13 @@ const useLoginApi = (username, password) => {
           "Content-Type": "application/x-amz-json-1.1",
         },
       });
-      token = await res.json();
-
-      let authToken = token.AuthenticationResult.IdToken;
-      let decodeToken = jwtDecode(authToken);
+      const result = await res.json();
+      token = result.AuthenticationResult.IdToken;
+      let decodeToken = jwtDecode(token);
       let email = decodeToken.email;
-
-      console.log(email)
-      return { authToken, email };
+      return { token, email };
     } catch (error) {
-      console.log(error);
-      return;
+      return { token, email };
     }
   };
   return { loginUser };

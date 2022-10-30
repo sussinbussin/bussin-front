@@ -25,6 +25,7 @@ import HomeTopBar from "../components/HomeTopBar";
 import PickupSearch from "../components/PickupSearch";
 import MapViewDirections from "react-native-maps-directions";
 import SuggestedRoutes from "../components/SuggestedRoutes";
+
 const Home = ({ navigation }) => {
   const { state, dispatch } = useContext(GlobalContext);
   if (!state.flags.home) return null;
@@ -48,20 +49,33 @@ const Home = ({ navigation }) => {
       setLocation(location.coords);
     })();
   }, []);
-  //move camera to pick up point
+
+  //on changes to pickup and dest, generate markers.
   useEffect(() => {
-    if (state.pickup.geo == null) return;
+    //for some reason the dispatch only updates here so i have to write the logic for the marker dispatch here.
+    let payload = [];
+
+    if (state.dest.geo) payload.push(state.dest.geo);
+    if (state.pickup.geo) payload.push(state.pickup.geo);
+
+    dispatch({ type: "SET_MARKERS", payload: payload });
+  }, [state.pickup.geo, state.dest.geo]);
+
+  //move camera to pick up point
+  //listen to changes made by SET_CAMERA and then change accordingly.
+  useEffect(() => {
+    if (state.camera == null) return;
 
     map.current.animateCamera(
       {
         center: {
-          latitude: state.pickup.geo.lat,
-          longitude: state.pickup.geo.lng,
+          latitude: state.camera.lat,
+          longitude: state.camera.lng,
         },
       },
       { duration: 300 }
     );
-  }, [state.pickup.geo]);
+  }, [state.camera]);
 
   const bottomBar = () => {
     if (state.stage.display == "search")
@@ -106,28 +120,19 @@ const Home = ({ navigation }) => {
             bottom: 250,
           }}
         >
-          {state.dest.geo && (
-            <Marker
-              coordinate={{
-                latitude: state.dest.geo.lat,
-                longitude: state.dest.geo.lng,
-              }}
-              pinColor={"white"}
-            ></Marker>
-          )}
-          {state.pickup.geo && (
-            <Marker
-              coordinate={{
-                latitude: state.pickup.geo.lat,
-                longitude: state.pickup.geo.lng,
-              }}
-              pinColor={"white"}
-            ></Marker>
-          )}
+          {state.markers.map((route) => {
+            console.log("generate markers");
+            return (
+              <Marker
+                coordinate={{
+                  latitude: route.lat,
+                  longitude: route.lng,
+                }}
+                pinColor="white"
+              />
+            );
+          })}
           {areBothLocationsGeoChosen() && (
-            //TODO: remove hardcode for origin and destination so that different routes can see
-            //TODO: add ability to show waypoints
-            //TODO: make another check for the lat lon
             <MapViewDirections
               origin={{
                 latitude: state.pickup.geo.lat,

@@ -43,7 +43,6 @@ const Login = ({ navigation }) => {
       if (!enrolled) return;
       //check if user logged in
       let token = await SecureStore.getItemAsync("idToken");
-      token = JSON.parse(token);
       if (!token) return;
 
       const check = await LocalAuthentication.authenticateAsync();
@@ -75,30 +74,35 @@ const Login = ({ navigation }) => {
       }
       return;
     }
-    
-    let authNRes = await loginUser();
-    let token = authNRes.authToken;
-    let email = authNRes.email;
 
+    let { token, email } = await loginUser();
     if (!token) {
-      console.log("Invalid user");
+      setPassword("");
+      setUsername("");
       return;
     }
-
-    let user = await useUserApi(token).getUser(email);
+    const { getUser } = useUserApi(token);
+    let user = await getUser(email);
     if (!user) {
       return;
     }
 
-    await SecureStore.setItemAsync(
-      "idToken",
-      JSON.stringify(token).replace(/['"]+/g, "")
-    );
-    await SecureStore.setItemAsync(
-      "uuid",
-      JSON.stringify(user.id).replace(/['"]+/g, '')
-    );
+    dispatch({ type: "SET_USER", payload: user });
+    dispatch({
+      type: "MODIFY_STAGE",
+      payload: {
+        ...state.stage,
+        locationSearch: {
+          text: `Where to, ${user.name}?`,
+        },
+      },
+    });
+    dispatch({
+      type: "SET_TOKEN",
+      payload: token,
+    });
 
+    await SecureStore.setItemAsync("idToken", token);
     navigation.navigate("Home");
   };
 
