@@ -60,6 +60,9 @@ const SuggestedRoutes = () => {
               }
             })}
           </HStack>
+          <Button variant="outline" onPress={handleSubmit}>
+            Book
+          </Button>
         </Box>
       );
     }
@@ -142,7 +145,13 @@ const SuggestedRoutes = () => {
   //fix bug swipe with whole screen
   return (
     state.routes && (
-      <>
+      <View
+        style={{
+          height: 280,
+          marginTop: "auto",
+          backgroundColor: 0,
+        }}
+      >
         <Carousel
           style={styles.carousel}
           data={state.routes}
@@ -153,7 +162,7 @@ const SuggestedRoutes = () => {
           layout="default"
         />
         {generatePagination()}
-      </>
+      </View>
     )
   );
 };
@@ -162,8 +171,6 @@ const styles = StyleSheet.create({
   box: {
     padding: 15,
     borderRadius: 10,
-    marginTop: "auto",
-    marginBottom: 60,
   },
 });
 export default SuggestedRoutes;
