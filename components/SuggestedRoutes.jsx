@@ -14,6 +14,7 @@ const SuggestedRoutes = () => {
   //TODO: implement get req from driver +  skeleton
   const renderSuggestions = ({ item, index }) => {
     if (item.carModel) {
+      console.log(item);
       return (
         <Box style={styles.box}>
           <Heading>{item.driver}</Heading>
@@ -59,6 +60,9 @@ const SuggestedRoutes = () => {
               }
             })}
           </HStack>
+          <Button variant="outline" onPress={handleSubmit}>
+            Book
+          </Button>
         </Box>
       );
     }
@@ -93,6 +97,7 @@ const SuggestedRoutes = () => {
     setCurrentIndex(index);
 
     let payload = [];
+    let mapPayload = [];
     let route = state.routes[index];
     // format the lat long properly
     console.log(state.routes[index]);
@@ -105,12 +110,31 @@ const SuggestedRoutes = () => {
         });
         payload.push({
           lat: item.destLatitude,
-          lng: item.destLongitude
+          lng: item.destLongitude,
+        });
+        mapPayload.push({
+          latitude: item.destLatitude,
+          longitude: item.destLongitude,
         });
       });
     }
 
+    if (route.carPlate) {
+      payload.push({
+        lat: route.originLatitude,
+        lng: route.originLongitude,
+      });
+      payload.push({
+        lat: route.destLatitude,
+        lng: route.destLongitude,
+      });
+    }
+
     dispatch({ type: "SET_MARKERS", payload: payload });
+    dispatch({
+      type: "SET_MAP",
+      payload: mapPayload,
+    });
   };
   //TODO: handle submit request
   const handleSubmit = () => {};
@@ -121,7 +145,13 @@ const SuggestedRoutes = () => {
   //fix bug swipe with whole screen
   return (
     state.routes && (
-      <>
+      <View
+        style={{
+          height: 280,
+          marginTop: "auto",
+          backgroundColor: 0,
+        }}
+      >
         <Carousel
           style={styles.carousel}
           data={state.routes}
@@ -132,7 +162,7 @@ const SuggestedRoutes = () => {
           layout="default"
         />
         {generatePagination()}
-      </>
+      </View>
     )
   );
 };
@@ -141,8 +171,6 @@ const styles = StyleSheet.create({
   box: {
     padding: 15,
     borderRadius: 10,
-    marginTop: "auto",
-    marginBottom: 60,
   },
 });
 export default SuggestedRoutes;

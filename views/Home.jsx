@@ -120,14 +120,14 @@ const Home = ({ navigation }) => {
             bottom: 250,
           }}
         >
-          {state.markers.map((route) => {
-            console.log("generate markers");
+          {state.markers.map((route, index) => {
             return (
               <Marker
                 coordinate={{
                   latitude: route.lat,
                   longitude: route.lng,
                 }}
+                key={index}
                 pinColor="white"
               />
             );
@@ -142,6 +142,9 @@ const Home = ({ navigation }) => {
                 latitude: state.dest.geo.lat,
                 longitude: state.dest.geo.lng,
               }}
+              waypoints={
+              (state.selectedRoute?.length > 2) ? state.selectedRoute.slice(1, -1) : undefined
+            }
               apikey={GOOGLE_API_KEY}
               strokeWidth={3}
               strokeColor="white"
