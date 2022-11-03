@@ -17,10 +17,6 @@ const RegisterComplete = ({ navigation }) => {
   const registerState = useContext(RegisterContext);
 
   useEffect(() => {
-    animation.current?.play();
-  }, []);
-
-  const handleAnimationFinish = async () => {
     let formData = {
       password: registerState.password,
       username: registerState.username,
@@ -39,6 +35,10 @@ const RegisterComplete = ({ navigation }) => {
     console.log(result);
     if (!result) return; //TODO handle error
 
+    animation.current?.play();
+  }, []);
+
+  const handleAnimationFinish = async () => {
     const { loginUser } = useLoginApi(
       registerState.username,
       registerState.password
