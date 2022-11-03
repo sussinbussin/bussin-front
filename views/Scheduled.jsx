@@ -22,6 +22,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import { useUserApi } from "../api/UsersApi";
 import dayjs from "dayjs";
 import arraySupport from "dayjs/plugin/arraySupport";
+import * as SecureStore from "expo-secure-store";
 
 function compare(a, b) {
   if (a.date == b.date) {
