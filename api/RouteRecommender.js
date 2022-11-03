@@ -1,9 +1,12 @@
 import { BETTER_API_ROUTE } from "@env";
 import ky from "ky";
 
-const useRecommenderAPI = () => {
+const useRecommenderAPI = (token) => {
   const api = ky.create({
     prefixUrl: BETTER_API_ROUTE,
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
   });
   const recommend = async (coords) => {
     console.log(coords);

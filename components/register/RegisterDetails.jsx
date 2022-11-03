@@ -110,7 +110,7 @@ const RegisterDetails = ({ navigation }) => {
           placeholder="99696969"
         />
         <FormControl.Label style={{ alignItems: "center" }}>
-          Mobile
+          Date of Birth
         </FormControl.Label>
         <Button
           onPress={showDateTimePicker}

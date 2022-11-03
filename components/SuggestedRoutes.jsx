@@ -118,7 +118,6 @@ const SuggestedRoutes = () => {
         });
       });
     }
-
     if (route.carPlate) {
       payload.push({
         lat: route.originLatitude,
@@ -139,7 +138,28 @@ const SuggestedRoutes = () => {
   //TODO: handle submit request
   const handleSubmit = () => {};
   useEffect(() => {
-    console.log(state.routes);
+    console.log(state.routes[currentIndex]);
+    //{
+    //"userUUID": "844b8d14-ef82-4b27-b9b5-a5e765c1254f",
+    //"plannedRouteUUID": "844b8d14-ef82-4b27-b9b5-a5e765c1254f",
+    //"rideDTO": {
+    //"id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    //"timestamp": "2022-11-03T13:08:21.086Z",
+    //"passengers": 2,
+    //"cost": 3,
+    //"rideFrom": "place_id:ChIJ483Qk9YX2jERA0VOQV7d1tY",
+    //"rideTo": "place_id:ChIJ483Qk9YX2jERA0VOQV7d1tY"
+    //}
+    //}
+    const formData = {
+      userUUID: state.user.id,
+      plannedRouteUUID: "fill later",
+      rideDTO: {
+        passengers: 1,
+
+      }
+
+    };
   }, []);
 
   //fix bug swipe with whole screen
