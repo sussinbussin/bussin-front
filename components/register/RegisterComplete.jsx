@@ -17,24 +17,22 @@ const RegisterComplete = ({ navigation }) => {
   const registerState = useContext(RegisterContext);
 
   useEffect(() => {
-    let formData = {
-      password: registerState.password,
-      username: registerState.username,
-      userDTO: {
-        nric: registerState.nric,
-        name: registerState.name,
-        dob: registerState.date.toISOString(),
-        mobile: registerState.mobile,
-        email: registerState.email,
-        isDriver: false,
-      },
-    };
-    console.log(formData);
-    const { register } = useRegisterApi();
-    let result = await register(formData);
-    console.log(result);
-    if (!result) return; //TODO handle error
-
+    (async () => {
+      let formData = {
+        password: registerState.password,
+        username: registerState.username,
+        userDTO: {
+          nric: registerState.nric,
+          name: registerState.name,
+          dob: registerState.date.toISOString(),
+          mobile: registerState.mobile,
+          email: registerState.email,
+          isDriver: false,
+        },
+      };
+      let result = await register(formData);
+      if (!result) return; //TODO handle error
+    })();
     animation.current?.play();
   }, []);
 
