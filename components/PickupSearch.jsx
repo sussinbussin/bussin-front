@@ -89,7 +89,7 @@ const PickupSearch = () => {
   const handleBook = async () => {
     setLoading(true);
 
-    const { recommend } = useRecommenderAPI();
+    const { recommend } = useRecommenderAPI(state.token);
     const result = await recommend({
       originLat: state.pickup.geo.lat,
       originLng: state.pickup.geo.lng,

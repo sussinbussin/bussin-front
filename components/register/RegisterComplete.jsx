@@ -5,6 +5,7 @@ import { useEffect, useRef, Animated, useContext } from "react";
 import { useRegisterApi } from "../../api/RegisterApi";
 import { RegisterContext } from "../../contexts/register";
 import { useLoginApi } from "../../api/LoginApi";
+import { useUserApi } from "../../api/UsersApi";
 import * as SecureStore from "expo-secure-store";
 import * as LocalAuthentication from "expo-local-authentication";
 import { GlobalContext } from "../../contexts/global";
@@ -35,6 +36,7 @@ const RegisterComplete = ({ navigation }) => {
     console.log(formData);
     const { register } = useRegisterApi();
     let result = await register(formData);
+    console.log(result);
     if (!result) return; //TODO handle error
 
     const { loginUser } = useLoginApi(
@@ -43,12 +45,11 @@ const RegisterComplete = ({ navigation }) => {
     );
     let { token, email } = await loginUser();
     if (!token) {
-      setPassword("");
-      setUsername("");
       return;
     }
     const { getUser } = useUserApi(token);
     let user = await getUser(email);
+    console.log(`user: ${user}`);
     if (!user) {
       return;
     }
