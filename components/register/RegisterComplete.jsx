@@ -30,6 +30,7 @@ const RegisterComplete = ({ navigation }) => {
           isDriver: false,
         },
       };
+      const {register} = useRegisterApi()
       let result = await register(formData);
       if (!result) return; //TODO handle error
     })();

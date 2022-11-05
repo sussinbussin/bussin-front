@@ -76,6 +76,7 @@ const Login = ({ navigation }) => {
     }
 
     let { token, email } = await loginUser();
+    console.log(token);
     if (!token) {
       setPassword("");
       setUsername("");
