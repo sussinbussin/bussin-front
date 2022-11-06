@@ -24,18 +24,22 @@ import dayjs from "dayjs";
 import arraySupport from "dayjs/plugin/arraySupport";
 import * as SecureStore from "expo-secure-store";
 
-function compare(a, b) {
-  if (a.date == b.date) {
-    if (a.time == b.time) {
-      return 1;
-    } else {
-      return -1;
-    }
-  } else if (a.date < b.date) {
-    return 1;
-  } else {
-    return -1;
-  }
+// function compare(a, b) {
+//   if (a.date == b.date) {
+//     if (a.time == b.time) {
+//       return 1;
+//     } else {
+//       return -1;
+//     }
+//   } else if (a.date < b.date) {
+//     return 1;
+//   } else {
+//     return -1;
+//   }
+// }
+
+function compare( a, b ) {
+  return new Date(b.date) - new Date(a.date)
 }
 
 const getScheduledRides = async (setData) => {
@@ -54,12 +58,9 @@ const getScheduledRides = async (setData) => {
 
   let rides = [];
   for (let i = 0; i < plannedRides.length; i++) {
-    console.log(plannedRides[i].plannedRoute.dateTime[1]);
+    // console.log(plannedRides[i].plannedRoute.dateTime[1]);
     plannedRides[i].plannedRoute.dateTime[1] -= 1;
     let date = dayjs(plannedRides[i].plannedRoute.dateTime.slice(0, 5));
-    console.log("rides " + plannedRides[i]);
-
-    console.log(plannedRides[i].plannedRoute.rides.length);
     let status = ""; // check status thing
     if (plannedRides[i].plannedRoute.rides.length == 0) {
       if (date < today) {
