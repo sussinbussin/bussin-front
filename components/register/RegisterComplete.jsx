@@ -30,6 +30,7 @@ const RegisterComplete = ({ navigation }) => {
           isDriver: false,
         },
       };
+      const {register} = useRegisterApi()
       let result = await register(formData);
       if (!result) return; //TODO handle error
     })();
@@ -42,6 +43,7 @@ const RegisterComplete = ({ navigation }) => {
       registerState.password
     );
     let { token, email } = await loginUser();
+    console.log(token,email);
     if (!token) {
       return;
     }

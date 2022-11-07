@@ -29,7 +29,21 @@ const usePlacesAPI = (query) => {
     const result = await res.json();
     return result.result.geometry.location;
   };
-  return { findPlaces, getGeometry };
+
+  const getDetails = async () => {
+    const url = "https://maps.googleapis.com/maps/api/place/details/json?";
+    const res = await fetch(
+      url +
+        new URLSearchParams({
+          place_id: query,
+          key: GOOGLE_API_KEY,
+          fields: ["name","formatted_address"],
+        })
+    );
+    const result = await res.json();
+    return result.result;
+  };
+  return { findPlaces, getGeometry, getDetails };
 };
 
 export { usePlacesAPI };

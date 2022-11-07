@@ -31,6 +31,7 @@ const useLoginApi = (username, password) => {
       let email = decodeToken.email;
       return { token, email };
     } catch (error) {
+      console.error(error);
       return { token, email };
     }
   };

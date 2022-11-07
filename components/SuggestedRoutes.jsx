@@ -5,6 +5,8 @@ import { useContext, useEffect } from "react";
 import { Carousel, Pagination } from "react-native-snap-carousel";
 import { useState } from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { useRideApi } from "../api/RideApi";
+import dayjs from "dayjs";
 
 const SuggestedRoutes = () => {
   const { state, dispatch } = useContext(GlobalContext);
@@ -14,7 +16,6 @@ const SuggestedRoutes = () => {
   //TODO: implement get req from driver +  skeleton
   const renderSuggestions = ({ item, index }) => {
     if (item.carModel) {
-      console.log(item);
       return (
         <Box style={styles.box}>
           <Heading>{item.driver}</Heading>
@@ -30,8 +31,6 @@ const SuggestedRoutes = () => {
 
     //public transport
     if (item.route) {
-      console.log("ROUTES");
-      console.log(item);
       return (
         <Box style={styles.box}>
           <Heading>Public Transport</Heading>
@@ -60,8 +59,8 @@ const SuggestedRoutes = () => {
               }
             })}
           </HStack>
-          <Button variant="outline" onPress={handleSubmit}>
-            Book
+          <Button>
+            More Info
           </Button>
         </Box>
       );
@@ -136,9 +135,9 @@ const SuggestedRoutes = () => {
     });
   };
   //TODO: handle submit request
-  const handleSubmit = () => {};
-  useEffect(() => {
+  const handleSubmit = async () => {
     console.log(state.routes[currentIndex]);
+    console.log(state.token);
     //{
     //"userUUID": "844b8d14-ef82-4b27-b9b5-a5e765c1254f",
     //"plannedRouteUUID": "844b8d14-ef82-4b27-b9b5-a5e765c1254f",
@@ -151,16 +150,25 @@ const SuggestedRoutes = () => {
     //"rideTo": "place_id:ChIJ483Qk9YX2jERA0VOQV7d1tY"
     //}
     //}
+    let date = dayjs(state.routes[currentIndex].dateTime);
     const formData = {
       userUUID: state.user.id,
-      plannedRouteUUID: "fill later",
+      plannedRouteUUID: state.routes[currentIndex].id,
       rideDTO: {
         passengers: 1,
-
-      }
-
+        cost: state.routes[currentIndex].cost.toFixed(2),
+        timestamp: date.toISOString(),
+        rideFrom: state.pickup.item.place_id,
+        rideTo: state.dest.item.place_id,
+      },
     };
-  }, []);
+
+    console.log(formData);
+    const { createRide } = useRideApi(state.token);
+    let result = await createRide(formData);
+    console.log(result);
+  };
+  useEffect(() => {}, []);
 
   //fix bug swipe with whole screen
   return (
