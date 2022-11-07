@@ -43,6 +43,7 @@ const RegisterComplete = ({ navigation }) => {
       registerState.password
     );
     let { token, email } = await loginUser();
+    console.log(token,email);
     if (!token) {
       return;
     }

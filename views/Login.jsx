@@ -62,6 +62,10 @@ const Login = ({ navigation }) => {
           },
         },
       });
+    dispatch({
+      type: "SET_TOKEN",
+      payload: token,
+    });
       navigation.navigate("Home");
     })();
   }, []);

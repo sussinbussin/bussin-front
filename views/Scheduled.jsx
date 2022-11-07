@@ -23,6 +23,7 @@ import { useUserApi } from "../api/UsersApi";
 import dayjs from "dayjs";
 import arraySupport from "dayjs/plugin/arraySupport";
 import * as SecureStore from "expo-secure-store";
+import { usePlacesAPI } from "../api/PlacesAPI";
 
 // function compare(a, b) {
 //   if (a.date == b.date) {
@@ -38,16 +39,15 @@ import * as SecureStore from "expo-secure-store";
 //   }
 // }
 
-function compare( a, b ) {
-  return new Date(b.date) - new Date(a.date)
+function compare(a, b) {
+  return new Date(b.date) - new Date(a.date);
 }
 
-const getScheduledRides = async (setData) => {
-  let token = await SecureStore.getItemAsync("idToken");
-
-  let uuid = await SecureStore.getItemAsync("uuid");
-  let user = await useUserApi(token, uuid).getFullUserByUuid(uuid);
-
+const getScheduledRides = async (setData, state) => {
+  //let user = await useUserApi(token, uuid).getFullUserByUuid(uuid);
+  const { getFullUserByUuid } = useUserApi(state.token);
+  const user = await getFullUserByUuid(state.user.id);
+  console.log(state.token, state.user.id);
   let today = dayjs();
   dayjs.extend(arraySupport);
   const plannedRides = user.rides;
@@ -57,12 +57,12 @@ const getScheduledRides = async (setData) => {
   // mode and estiamted duration?
 
   let rides = [];
-  for (let i = 0; i < plannedRides.length; i++) {
+  for (let ride of plannedRides) {
     // console.log(plannedRides[i].plannedRoute.dateTime[1]);
-    plannedRides[i].plannedRoute.dateTime[1] -= 1;
-    let date = dayjs(plannedRides[i].plannedRoute.dateTime.slice(0, 5));
+    //plannedRides[i].plannedRoute.dateTime[1] -= 1;
+    let date = dayjs(ride.timestamp);
     let status = ""; // check status thing
-    if (plannedRides[i].plannedRoute.rides.length == 0) {
+    if (plannedRides.length == 0) {
       if (date < today) {
         status = "Past";
       } else {
@@ -76,26 +76,21 @@ const getScheduledRides = async (setData) => {
       }
     }
 
+    //Time to destroy weibins wallet with API calls
+    const to = await usePlacesAPI(ride.rideTo).getDetails();
+    const from = await usePlacesAPI(ride.rideFrom).getDetails();
+
     rides.push({
-      id: plannedRides[i].id,
-      noPassengers: plannedRides[i].passengers,
-      cost: plannedRides[i].cost,
+      id: ride.id,
+      noPassengers: ride.passengers,
+      cost: ride.cost,
       // date: plannedRides[i].plannedRoute.dateTime, // wtf?
       date: date.format("DD/MM/YYYY"),
       time: date.format("hh:mmA"),
       // time: plannedRides[i].plannedRoute.dateTime,
-      from: plannedRides[i].rideFrom,
-      to: plannedRides[i].rideTo,
+      from: from,
+      to: to,
       status: status,
-      plannedRoute: {
-        id: "",
-        // kiv
-        from: "",
-        to: "",
-        date: "",
-        time: "",
-        driver: plannedRides[i].plannedRoute.driver,
-      },
     });
   }
 
@@ -111,19 +106,27 @@ const Scheduled = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    getScheduledRides(setData);
+    getScheduledRides(setData, state);
   }, []);
 
   const renderItem = ({ item }) => (
-    <List style={{ paddingTop: 20, paddingBottom: 20 }}>
+    <List
+      style={{
+        paddingTop: 20,
+        paddingBottom: 20,
+        borderWidth: 0,
+        borderBottomWidth: 1,
+        borderColor: "muted.300"
+      }}
+    >
       <View style={{ marginLeft: 15 }}>
         <View flexDirection="row" style={{ marginBottom: 5 }}></View>
         <View flexDirection="row" style={{ marginBottom: 5 }}>
           <Text fontSize="md" style={{ marginRight: 5 }}>
             From:
           </Text>
-          <Text fontSize="md" fontWeight="bold">
-            {item.from}
+          <Text fontSize="md" fontWeight="bold" isTruncated maxWidth="250">
+            {item.from.name}
           </Text>
         </View>
         <View flexDirection="row" style={{ marginBottom: 5 }}>
@@ -136,8 +139,8 @@ const Scheduled = () => {
             color="white"
             style={{ marginLeft: 5, marginRight: 5, marginTop: 2.5 }}
           /> */}
-          <Text fontSize="md" fontWeight="bold">
-            {item.to}
+          <Text fontSize="md" fontWeight="bold" isTruncated maxWidth="250">
+            {item.to.name}
           </Text>
         </View>
 

@@ -16,11 +16,26 @@ const useRegisterApi = () => {
       result = await res.json();
       return result;
     } catch (error) {
+      console.log(error);
       return result;
     }
   };
 
-  return { register };
+  const check = async (form) => {
+    let result = null;
+    try {
+      const res = await api.post("unique", {
+        json: form,
+      });
+      result = await res.json();
+      return result;
+    } catch (error) {
+      console.error(error);
+      return result;
+    }
+  };
+
+  return { register, check };
 };
 
 export { useRegisterApi };

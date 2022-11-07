@@ -59,6 +59,9 @@ const SuggestedRoutes = () => {
               }
             })}
           </HStack>
+          <Button>
+            More Info
+          </Button>
         </Box>
       );
     }
@@ -163,6 +166,7 @@ const SuggestedRoutes = () => {
     console.log(formData);
     const { createRide } = useRideApi(state.token);
     let result = await createRide(formData);
+    console.log(result);
   };
   useEffect(() => {}, []);
 

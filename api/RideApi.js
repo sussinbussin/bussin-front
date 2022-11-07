@@ -14,7 +14,7 @@ const useRideApi = (token) => {
 
     try {
       const res = await api.post(`ride`, {
-        json: ride
+        json: ride,
       });
       result = await res.json();
       return result;
@@ -23,8 +23,18 @@ const useRideApi = (token) => {
       return result;
     }
   };
-  
-  return { createRide }
+
+  const getRide = async (id) => {
+    let data = null;
+    try {
+      const res = await api.get(`ride/${id}`);
+      data = await res.json();
+    } catch (error) {
+      console.log(error);
+      return data;
+    }
+  };
+  return { createRide, getRide };
 };
 
 export { useRideApi };
