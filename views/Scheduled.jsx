@@ -47,7 +47,7 @@ const getScheduledRides = async (setData, state) => {
   //let user = await useUserApi(token, uuid).getFullUserByUuid(uuid);
   const { getFullUserByUuid } = useUserApi(state.token);
   const user = await getFullUserByUuid(state.user.id);
-  console.log(state.token, state.user.id);
+
   let today = dayjs();
   dayjs.extend(arraySupport);
   const plannedRides = user.rides;
@@ -79,7 +79,8 @@ const getScheduledRides = async (setData, state) => {
     //Time to destroy weibins wallet with API calls
     const to = await usePlacesAPI(ride.rideTo).getDetails();
     const from = await usePlacesAPI(ride.rideFrom).getDetails();
-
+    //timezone
+    date = date.add(8, "hour");
     rides.push({
       id: ride.id,
       noPassengers: ride.passengers,
@@ -116,7 +117,7 @@ const Scheduled = () => {
         paddingBottom: 20,
         borderWidth: 0,
         borderBottomWidth: 1,
-        borderColor: "muted.300"
+        borderColor: "muted.300",
       }}
     >
       <View style={{ marginLeft: 15 }}>
