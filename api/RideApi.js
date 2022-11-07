@@ -9,7 +9,7 @@ const useRideApi = (token) => {
     },
   });
 
-  const createRide = (ride) => {
+  const createRide = async (ride) => {
     let result = null;
 
     try {

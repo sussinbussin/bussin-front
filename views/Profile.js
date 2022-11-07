@@ -35,7 +35,7 @@ const Profile = () => {
   const renderDefaults = async () => {
     let token = await SecureStore.getItemAsync("idToken");
     const decodedToken = jwtDecode(token);
-    const { getUser } = useUserApi(token, decodedToken.email);
+    const { getUser } = useUserApi(token);
 
     let user = await getUser(decodedToken.email);
     setName(user.name);
