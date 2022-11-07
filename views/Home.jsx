@@ -1,4 +1,4 @@
-import { GOOGLE_API_KEY } from "@env";
+import { GOOGLE_API_KEY, TRACK_API_ROUTE } from "@env";
 import {
   Heading,
   View,
@@ -25,6 +25,7 @@ import HomeTopBar from "../components/HomeTopBar";
 import PickupSearch from "../components/PickupSearch";
 import MapViewDirections from "react-native-maps-directions";
 import SuggestedRoutes from "../components/SuggestedRoutes";
+import { useUserApi } from "../api/UsersApi";
 
 const Home = ({ navigation }) => {
   const { state, dispatch } = useContext(GlobalContext);
@@ -50,6 +51,16 @@ const Home = ({ navigation }) => {
     })();
   }, []);
 
+  //listen for drive
+  useEffect(() => {
+    (async () => {
+      const { getFullUserByUuid } = useUserApi(state.token);
+      const user = await getFullUserByUuid(state.user.id);
+      for(let item of user.rides){
+        console.log(item);
+      }
+    })();
+  }, []);
   //on changes to pickup and dest, generate markers.
   useEffect(() => {
     //for some reason the dispatch only updates here so i have to write the logic for the marker dispatch here.
@@ -143,8 +154,10 @@ const Home = ({ navigation }) => {
                 longitude: state.dest.geo.lng,
               }}
               waypoints={
-              (state.selectedRoute?.length > 2) ? state.selectedRoute.slice(1, -1) : undefined
-            }
+                state.selectedRoute?.length > 2
+                  ? state.selectedRoute.slice(1, -1)
+                  : undefined
+              }
               apikey={GOOGLE_API_KEY}
               strokeWidth={3}
               strokeColor="white"
