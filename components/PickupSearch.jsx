@@ -100,7 +100,9 @@ const PickupSearch = () => {
       //time: "2022/10/06 07:30:00",
     });
 
+    console.log("recommend");
     console.log(result);
+
     if (!result) return;
     let routes = result["Recommended Driver Routes"];
     dispatch({

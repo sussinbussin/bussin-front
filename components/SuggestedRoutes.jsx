@@ -1,7 +1,15 @@
-import { Box, Heading, Text, Button, View, HStack } from "native-base";
+import {
+  Box,
+  Heading,
+  Text,
+  Button,
+  View,
+  VStack,
+  HStack,
+} from "native-base";
 import { Dimensions, StyleSheet } from "react-native";
 import { GlobalContext } from "../contexts/global";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { Carousel, Pagination } from "react-native-snap-carousel";
 import { useState } from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -12,7 +20,7 @@ const SuggestedRoutes = () => {
   const { state, dispatch } = useContext(GlobalContext);
   const { height, width } = Dimensions.get("screen");
   const [currentIndex, setCurrentIndex] = useState(0);
-
+  const actionRef = useRef();
   //TODO: implement get req from driver +  skeleton
   const renderSuggestions = ({ item, index }) => {
     if (item.carModel) {
@@ -36,32 +44,55 @@ const SuggestedRoutes = () => {
           <Heading>Public Transport</Heading>
           <Text fontSize="md">${item.cost}</Text>
 
-          <HStack>
+          <VStack>
             {item.route.map((val, index) => {
               if (val.transportMode == "walking") {
                 return (
+                  <HStack>
                   <MaterialIcons
+                    key={index}
                     name="directions-walk"
                     size={24}
                     color="white"
                   />
+                      <Text>Walk</Text>
+                  </HStack>
                 );
               }
 
               if (val.transportMode == "bus") {
                 return (
+                  <HStack>
                   <MaterialIcons
+                    key={index}
                     name="directions-bus"
                     size={24}
                     color="white"
                   />
+                      <Text>
+                      {val.service}:{val.origin} - {val.dest}
+                    </Text>
+                  </HStack>
+                );
+              }
+              if (val.transportMode == "mrt") {
+                return (
+                  <HStack>
+                  <MaterialIcons
+                    key={index}
+                    name="directions-train"
+                    size={24}
+                    color="white"
+                  />
+                      <Text>
+                      {val.origin} - {val.dest}
+                    </Text>
+                  </HStack>
                 );
               }
             })}
-          </HStack>
-          <Button>
-            More Info
-          </Button>
+          </VStack>
+
         </Box>
       );
     }
@@ -99,7 +130,6 @@ const SuggestedRoutes = () => {
     let mapPayload = [];
     let route = state.routes[index];
     // format the lat long properly
-    console.log(state.routes[index]);
 
     if (route.route) {
       route.route.map((item) => {
@@ -136,8 +166,6 @@ const SuggestedRoutes = () => {
   };
   //TODO: handle submit request
   const handleSubmit = async () => {
-    console.log(state.routes[currentIndex]);
-    console.log(state.token);
     //{
     //"userUUID": "844b8d14-ef82-4b27-b9b5-a5e765c1254f",
     //"plannedRouteUUID": "844b8d14-ef82-4b27-b9b5-a5e765c1254f",
@@ -163,10 +191,11 @@ const SuggestedRoutes = () => {
       },
     };
 
-    console.log(formData);
     const { createRide } = useRideApi(state.token);
     let result = await createRide(formData);
-    console.log(result);
+    if (!result) return;
+
+    navigation.navigate("Scheduled");
   };
   useEffect(() => {}, []);
 
