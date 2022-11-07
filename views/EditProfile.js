@@ -119,7 +119,7 @@ const EditProfile = ({ navigate, route }) => {
         <AntDesign
           name="user"
           size={60}
-          color="pink"
+          color="white"
           style={{ marginLeft: 25, marginRight: 25, marginTop: 5 }}
         />
       </View>

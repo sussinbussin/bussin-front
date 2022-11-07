@@ -59,7 +59,7 @@ const Profile = () => {
             <AntDesign
               name="user"
               size={60}
-              color="pink"
+              color="white"
               style={{ marginLeft: 25, marginRight: 25 }}
             />
           </View>
@@ -75,7 +75,7 @@ const Profile = () => {
                 style={{ marginTop: 3, marginRight: 7.5 }}
               />
 
-              <Text style={{ fontSize: 16 }}>69.69</Text>
+              <Text style={{ fontSize: 16 }}>5.00</Text>
             </View>
           </View>
           <Box style={{ flex: 1, backgroundColor: 0 }}></Box>
