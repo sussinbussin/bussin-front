@@ -41,7 +41,7 @@ const EditProfile = ({ navigate, route }) => {
   const [phoneColor, setPhoneColor] = useState("white");
   const [emailColor, setEmailColor] = useState("white");
   const [buttonMessage, setButtonMessage] = useState("Save changes");
- 
+
   const renderDefaults = async () => {
     let token = await SecureStore.getItemAsync("idToken");
     let uuid = await SecureStore.getItemAsync("uuid");
@@ -89,13 +89,14 @@ const EditProfile = ({ navigate, route }) => {
 
     // if all valid, proceed to Put request
     if (phoneIsValid && emailIsValid) {
-      let userDTO = { 
-        "nric":nric, 
-        "name": name, 
-        "dob":dob, 
-        "mobile":mobile, 
-        "email":email, 
-        "isDriver":isDriver };
+      let userDTO = {
+        nric: nric,
+        name: name,
+        dob: dob,
+        mobile: mobile,
+        email: email,
+        isDriver: isDriver,
+      };
 
       let token = await SecureStore.getItemAsync("idToken");
 
