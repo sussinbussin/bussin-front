@@ -33,12 +33,7 @@ const Profile = () => {
   const [name, setName] = useState("");
 
   const renderDefaults = async () => {
-    let token = await SecureStore.getItemAsync("idToken");
-    const decodedToken = jwtDecode(token);
-    const { getUser } = useUserApi(token);
-
-    let user = await getUser(decodedToken.email);
-    setName(user.name);
+    setName(state.user.name);
     setRendered(true);
   };
   if (!rendered) {
@@ -67,16 +62,8 @@ const Profile = () => {
           <View style={{ flex: 2, marginTop: 8 }}>
             <Text style={{ fontSize: 20, fontWeight: "bold" }}>{name}</Text>
 
-            <View flexDirection="row">
-              <AntDesign
-                name="star"
-                size={15}
-                color="white"
-                style={{ marginTop: 3, marginRight: 7.5 }}
-              />
 
-              <Text style={{ fontSize: 16 }}>5.00</Text>
-            </View>
+              <Text style={{ fontSize: 16 }}>Hi, {name}</Text>
           </View>
           <Box style={{ flex: 1, backgroundColor: 0 }}></Box>
 
@@ -170,6 +157,7 @@ const Profile = () => {
             <Pressable
               onPress={() => {
                 console.log("emergency");
+                navigation.navigate("BookingSuccess")
               }}
               flexDirection="row"
             >

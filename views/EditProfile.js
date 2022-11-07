@@ -1,17 +1,11 @@
 import {
-  Text,
   Box,
   Button,
-  Heading,
   FormControl,
   Input,
   Stack,
-  Center,
   View,
-  Pressable,
-  Flex,
 } from "native-base";
-import { TouchableHighlight, Image } from "react-native";
 import { useContext, useState } from "react";
 import TopBarBack from "../components/TopBarBack";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -19,13 +13,10 @@ import { GlobalContext } from "../contexts/global";
 import { useNavigation } from "@react-navigation/native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useUserApi } from "../api/UsersApi";
-import * as SecureStore from "expo-secure-store";
 
-const EditProfile = ({ navigate, route }) => {
+const EditProfile = ({}) => {
   const { state } = useContext(GlobalContext);
   if (!state.flags.editProfile) return null;
-  const insets = useSafeAreaInsets();
-  const navigation = useNavigation();
 
   const [rendered, setRendered] = useState(false);
 
@@ -43,17 +34,13 @@ const EditProfile = ({ navigate, route }) => {
   const [buttonMessage, setButtonMessage] = useState("Save changes");
 
   const renderDefaults = async () => {
-    let token = await SecureStore.getItemAsync("idToken");
-    let uuid = await SecureStore.getItemAsync("uuid");
-    let user = await useUserApi(token).getFullUserByUuid(uuid);
-
-    setUuid(user.id);
-    setName(user.name);
-    setMobile(user.mobile);
-    setEmail(user.email);
-    setNric(user.nric);
-    setDob(user.dob);
-    setDriver(user.isDriver);
+    setUuid(state.user.id);
+    setName(state.user.name);
+    setMobile(state.user.mobile);
+    setEmail(state.user.email);
+    setNric(state.user.nric);
+    setDob(state.user.dob);
+    setDriver(state.user.isDriver);
 
     setRendered(true);
   };
@@ -97,10 +84,13 @@ const EditProfile = ({ navigate, route }) => {
         email: email,
         isDriver: isDriver,
       };
+    //  let token = await SecureStore.getItemAsync("idToken");
 
-      let token = await SecureStore.getItemAsync("idToken");
-
-      let user = await useUserApi(token).updateUser(uuid, userDTO);
+      // let user = await useUserApi(token).updateUser(uuid, userDTO);
+      
+      const { updateUser } = useUserApi(state.token);
+      let user = await updateUser(uuid, userDTO);    
+      dispatch({ type: "SET_USER", payload: user });
 
       // if user...
       if (user) {
