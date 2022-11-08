@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  FormControl,
-  Input,
-  Stack,
-  View,
-} from "native-base";
+import { Box, Button, FormControl, Input, Stack, View } from "native-base";
 import { useContext, useState } from "react";
 import TopBarBack from "../components/TopBarBack";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -15,8 +8,9 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import { useUserApi } from "../api/UsersApi";
 
 const EditProfile = ({}) => {
-  const { state } = useContext(GlobalContext);
+  const { state, dispatch } = useContext(GlobalContext);
   if (!state.flags.editProfile) return null;
+  const navigation = useNavigation();
 
   const [rendered, setRendered] = useState(false);
 
@@ -84,18 +78,28 @@ const EditProfile = ({}) => {
         email: email,
         isDriver: isDriver,
       };
-    //  let token = await SecureStore.getItemAsync("idToken");
+      //  let token = await SecureStore.getItemAsync("idToken");
 
       // let user = await useUserApi(token).updateUser(uuid, userDTO);
-      
+
       const { updateUser } = useUserApi(state.token);
-      let user = await updateUser(uuid, userDTO);    
+      let user = await updateUser(uuid, userDTO);
       dispatch({ type: "SET_USER", payload: user });
 
       // if user...
       if (user) {
         console.log("put works");
         setButtonMessage("Profile updated!");
+        navigation.navigate("Home");
+      dispatch({
+        type: "MODIFY_STAGE",
+        payload: {
+          ...state.stage,
+          locationSearch: {
+            text: `Where to, ${user.name}?`,
+          },
+        },
+      });
       } else {
         console.log("rip put doesn't work");
       }
