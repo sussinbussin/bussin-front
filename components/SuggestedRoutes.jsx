@@ -15,11 +15,13 @@ import { useState } from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRideApi } from "../api/RideApi";
 import dayjs from "dayjs";
+import {useNavigation} from "@react-navigation/native";
 
 const SuggestedRoutes = () => {
   const { state, dispatch } = useContext(GlobalContext);
   const { height, width } = Dimensions.get("screen");
   const [currentIndex, setCurrentIndex] = useState(0);
+  const navigation = useNavigation();
   const actionRef = useRef();
   //TODO: implement get req from driver +  skeleton
   const renderSuggestions = ({ item, index }) => {
@@ -85,7 +87,7 @@ const SuggestedRoutes = () => {
                     color="white"
                   />
                       <Text>
-                      {val.origin} - {val.dest}
+                      {val.service} : {val.origin} - {val.dest}
                     </Text>
                   </HStack>
                 );

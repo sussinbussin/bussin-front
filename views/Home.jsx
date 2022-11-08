@@ -1,4 +1,4 @@
-import { GOOGLE_API_KEY, TRACK_API_ROUTE } from "@env";
+import { GOOGLE_API_KEY } from "@env";
 import {
   Heading,
   View,
@@ -26,6 +26,8 @@ import PickupSearch from "../components/PickupSearch";
 import MapViewDirections from "react-native-maps-directions";
 import SuggestedRoutes from "../components/SuggestedRoutes";
 import { useUserApi } from "../api/UsersApi";
+import { useTrackApi } from "../api/TrackApi";
+import Tracker from "../components/Tracker";
 
 const Home = ({ navigation }) => {
   const { state, dispatch } = useContext(GlobalContext);
@@ -54,11 +56,29 @@ const Home = ({ navigation }) => {
   //listen for drive
   useEffect(() => {
     (async () => {
-      const { getFullUserByUuid } = useUserApi(state.token);
-      const user = await getFullUserByUuid(state.user.id);
-      for(let item of user.rides){
-        console.log(item);
-      }
+      //const { getFullUserByUuid } = useUserApi(state.token);
+      //const user = await getFullUserByUuid(state.user.id);
+      //console.log("full user");
+      //console.log(user);
+      //for(let item of user.rides){
+      //}
+      const interval = setInterval(async () => {
+        const { getAllTrack } = useTrackApi();
+        const res = await getAllTrack();
+        if (res.totalItems > 0) {
+          dispatch({
+            type: "SET_TRACK",
+            payload: res.items[0],
+          });
+        } else {
+          dispatch({
+            type: "SET_TRACK",
+            payload: null,
+          });
+        }
+      }, 1000);
+
+      return () => clearInterval(interval);
     })();
   }, []);
   //on changes to pickup and dest, generate markers.
@@ -178,6 +198,7 @@ const Home = ({ navigation }) => {
         </MapView>
       ) : null}
       <HomeTopBar />
+      {state.tracker && <Tracker></Tracker>}
       {bottomBar()}
     </View>
   );

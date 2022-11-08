@@ -45,7 +45,8 @@ const initialState = {
   biometrics: true,
   routes: null,
   camera: null,
-  markers: []
+  markers: [],
+  tracker: null
 };
 
 const initState = () => initialState;
@@ -97,6 +98,11 @@ const globalReducer = (state, action) => {
         ...state,
         markers: action.payload,
       };
+    case "SET_TRACK":
+      return {
+        ...state,
+        tracker: action.payload
+      }
     default:
       return state;
   }
