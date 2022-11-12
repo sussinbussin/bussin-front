@@ -10,7 +10,6 @@ const usePlannedRouteAPI = (token) => {
   });
 
   const getSuggestion = async (tripStart, tripEnd) => {
-    console.log(tripStart, tripEnd);
     let data = null;
     try {
       const res = await api.get("planned/suggestion", {
@@ -22,7 +21,6 @@ const usePlannedRouteAPI = (token) => {
         data = await res.json();
       return data;
     } catch (error) {
-      console.log(error);
       return;
     }
   };

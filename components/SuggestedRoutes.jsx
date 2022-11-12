@@ -1,12 +1,4 @@
-import {
-  Box,
-  Heading,
-  Text,
-  Button,
-  View,
-  VStack,
-  HStack,
-} from "native-base";
+import { Box, Heading, Text, Button, View, VStack, HStack } from "native-base";
 import { Dimensions, StyleSheet } from "react-native";
 import { GlobalContext } from "../contexts/global";
 import { useContext, useEffect, useRef } from "react";
@@ -15,15 +7,15 @@ import { useState } from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRideApi } from "../api/RideApi";
 import dayjs from "dayjs";
-import {useNavigation} from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 const SuggestedRoutes = () => {
   const { state, dispatch } = useContext(GlobalContext);
-  const { height, width } = Dimensions.get("screen");
+  const { width } = Dimensions.get("screen");
   const [currentIndex, setCurrentIndex] = useState(0);
   const navigation = useNavigation();
-  const actionRef = useRef();
-  //TODO: implement get req from driver +  skeleton
+
+  // get req from driver +  skeleton
   const renderSuggestions = ({ item, index }) => {
     if (item.carModel) {
       return (
@@ -51,13 +43,13 @@ const SuggestedRoutes = () => {
               if (val.transportMode == "walking") {
                 return (
                   <HStack>
-                  <MaterialIcons
-                    key={index}
-                    name="directions-walk"
-                    size={24}
-                    color="white"
-                  />
-                      <Text>Walk</Text>
+                    <MaterialIcons
+                      key={index}
+                      name="directions-walk"
+                      size={24}
+                      color="white"
+                    />
+                    <Text>Walk</Text>
                   </HStack>
                 );
               }
@@ -65,13 +57,13 @@ const SuggestedRoutes = () => {
               if (val.transportMode == "bus") {
                 return (
                   <HStack>
-                  <MaterialIcons
-                    key={index}
-                    name="directions-bus"
-                    size={24}
-                    color="white"
-                  />
-                      <Text>
+                    <MaterialIcons
+                      key={index}
+                      name="directions-bus"
+                      size={24}
+                      color="white"
+                    />
+                    <Text>
                       {val.service}:{val.origin} - {val.dest}
                     </Text>
                   </HStack>
@@ -80,13 +72,13 @@ const SuggestedRoutes = () => {
               if (val.transportMode == "mrt") {
                 return (
                   <HStack>
-                  <MaterialIcons
-                    key={index}
-                    name="directions-train"
-                    size={24}
-                    color="white"
-                  />
-                      <Text>
+                    <MaterialIcons
+                      key={index}
+                      name="directions-train"
+                      size={24}
+                      color="white"
+                    />
+                    <Text>
                       {val.service} : {val.origin} - {val.dest}
                     </Text>
                   </HStack>
@@ -94,7 +86,6 @@ const SuggestedRoutes = () => {
               }
             })}
           </VStack>
-
         </Box>
       );
     }
@@ -124,7 +115,6 @@ const SuggestedRoutes = () => {
     );
   };
 
-  //TODO: handle change map view
   const handleSnap = (index) => {
     setCurrentIndex(index);
 
@@ -166,20 +156,8 @@ const SuggestedRoutes = () => {
       payload: mapPayload,
     });
   };
-  //TODO: handle submit request
+
   const handleSubmit = async () => {
-    //{
-    //"userUUID": "844b8d14-ef82-4b27-b9b5-a5e765c1254f",
-    //"plannedRouteUUID": "844b8d14-ef82-4b27-b9b5-a5e765c1254f",
-    //"rideDTO": {
-    //"id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    //"timestamp": "2022-11-03T13:08:21.086Z",
-    //"passengers": 2,
-    //"cost": 3,
-    //"rideFrom": "place_id:ChIJ483Qk9YX2jERA0VOQV7d1tY",
-    //"rideTo": "place_id:ChIJ483Qk9YX2jERA0VOQV7d1tY"
-    //}
-    //}
     let date = dayjs(state.routes[currentIndex].dateTime);
     const formData = {
       userUUID: state.user.id,

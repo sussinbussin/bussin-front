@@ -1,13 +1,12 @@
 import { Box, Button, FormControl, Input, Stack, View } from "native-base";
 import { useContext, useState } from "react";
 import TopBarBack from "../components/TopBarBack";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { GlobalContext } from "../contexts/global";
 import { useNavigation } from "@react-navigation/native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useUserApi } from "../api/UsersApi";
 
-const EditProfile = ({}) => {
+const EditProfile = () => {
   const { state, dispatch } = useContext(GlobalContext);
   if (!state.flags.editProfile) return null;
   const navigation = useNavigation();
@@ -43,17 +42,15 @@ const EditProfile = ({}) => {
   }
 
   const submit = async () => {
-    // check if valid phone number
+    // first check for whether new input is a valid phone number
     const phoneIsValid =
       mobile.length === 8 &&
       (mobile.toString().indexOf("8") === 0 ||
         mobile.toString().indexOf("9") === 0);
 
-    // check email validity
+    // first check to check email validity
     const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
     const emailIsValid = emailRegex.test(email);
-
-    // TODO: check name & address valid?
 
     // change text colors if anything is invalid
     if (!phoneIsValid) {
@@ -78,9 +75,6 @@ const EditProfile = ({}) => {
         email: email,
         isDriver: isDriver,
       };
-      //  let token = await SecureStore.getItemAsync("idToken");
-
-      // let user = await useUserApi(token).updateUser(uuid, userDTO);
 
       const { updateUser } = useUserApi(state.token);
       let user = await updateUser(uuid, userDTO);
@@ -88,20 +82,17 @@ const EditProfile = ({}) => {
 
       // if user...
       if (user) {
-        console.log("put works");
         setButtonMessage("Profile updated!");
         navigation.navigate("Home");
-      dispatch({
-        type: "MODIFY_STAGE",
-        payload: {
-          ...state.stage,
-          locationSearch: {
-            text: `Where to, ${user.name}?`,
+        dispatch({
+          type: "MODIFY_STAGE",
+          payload: {
+            ...state.stage,
+            locationSearch: {
+              text: `Where to, ${user.name}?`,
+            },
           },
-        },
-      });
-      } else {
-        console.log("rip put doesn't work");
+        });
       }
     }
   };

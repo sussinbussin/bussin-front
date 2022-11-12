@@ -4,7 +4,6 @@ const flags = {
   login: true,
   home: true,
   register: true,
-  registerName: true,
   profile: true,
   editProfile: true,
   requireLogin: false,

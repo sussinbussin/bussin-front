@@ -1,18 +1,5 @@
 import { GOOGLE_API_KEY } from "@env";
-import {
-  Heading,
-  View,
-  Box,
-  HStack,
-  Center,
-  Input,
-  IconButton,
-  Flex,
-  VStack,
-  Spacer,
-  Modal,
-} from "native-base";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { View } from "native-base";
 import { useContext, useEffect, useState, useRef } from "react";
 import { StyleSheet, Dimensions } from "react-native";
 import { GlobalContext } from "../contexts/global";
@@ -25,14 +12,12 @@ import HomeTopBar from "../components/HomeTopBar";
 import PickupSearch from "../components/PickupSearch";
 import MapViewDirections from "react-native-maps-directions";
 import SuggestedRoutes from "../components/SuggestedRoutes";
-import { useUserApi } from "../api/UsersApi";
 import { useTrackApi } from "../api/TrackApi";
 import Tracker from "../components/Tracker";
 
-const Home = ({ navigation }) => {
+const Home = () => {
   const { state, dispatch } = useContext(GlobalContext);
   if (!state.flags.home) return null;
-  const insets = useSafeAreaInsets();
   const { width, height } = Dimensions.get("window");
   const [location, setLocation] = useState();
   const map = useRef();
@@ -56,12 +41,6 @@ const Home = ({ navigation }) => {
   //listen for drive
   useEffect(() => {
     (async () => {
-      //const { getFullUserByUuid } = useUserApi(state.token);
-      //const user = await getFullUserByUuid(state.user.id);
-      //console.log("full user");
-      //console.log(user);
-      //for(let item of user.rides){
-      //}
       const interval = setInterval(async () => {
         const { getAllTrack } = useTrackApi();
         const res = await getAllTrack();

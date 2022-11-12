@@ -1,13 +1,11 @@
-import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useContext } from "react";
 import RegisterName from "../components/register/RegisterName";
 import RegisterDetails from "../components/register/RegisterDetails";
 import RegisterPassword from "../components/register/RegisterPassword";
 import RegisterComplete from "../components/register/RegisterComplete";
 import { initialState, RegisterContext } from "../contexts/register";
 
-const RegisterNew = ({ navigation }) => {
+const RegisterNew = () => {
   const Stack = createNativeStackNavigator();
 
   return (

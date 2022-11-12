@@ -11,7 +11,7 @@ const usePlacesAPI = (query) => {
           locationbias: "ipbias",
         })
     );
-    const result = await res.json(); //todo: error checking
+    const result = await res.json();
     return result;
   };
 
@@ -37,7 +37,7 @@ const usePlacesAPI = (query) => {
         new URLSearchParams({
           place_id: query,
           key: GOOGLE_API_KEY,
-          fields: ["name","formatted_address"],
+          fields: ["name", "formatted_address"],
         })
     );
     const result = await res.json();

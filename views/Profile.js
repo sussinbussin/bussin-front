@@ -1,32 +1,14 @@
-import {
-  Text,
-  Box,
-  Button,
-  Heading,
-  FormControl,
-  Input,
-  Stack,
-  Center,
-  View,
-  Pressable,
-  Flex,
-} from "native-base";
-import { TouchableHighlight, Image } from "react-native";
-import { useContext, useState, useEffect } from "react";
+import { Text, Box, View, Pressable, Flex } from "native-base";
+import { StyleSheet } from "react-native";
+import { useContext, useState } from "react";
 import TopBarBack from "../components/TopBarBack";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { GlobalContext } from "../contexts/global";
 import { useNavigation } from "@react-navigation/native";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useUserApi } from "../api/UsersApi";
-import * as SecureStore from "expo-secure-store";
-import jwtDecode from "jwt-decode";
 
 const Profile = () => {
   const { state } = useContext(GlobalContext);
   if (!state.flags.profile) return null;
-  const insets = useSafeAreaInsets();
   const navigation = useNavigation();
 
   const [rendered, setRendered] = useState(false);
@@ -45,7 +27,6 @@ const Profile = () => {
       <TopBarBack></TopBarBack>
       <Pressable
         onPress={() => {
-          console.log("edit profile");
           navigation.navigate("EditProfile", { name: name });
         }}
       >
@@ -62,8 +43,7 @@ const Profile = () => {
           <View style={{ flex: 2, marginTop: 8 }}>
             <Text style={{ fontSize: 20, fontWeight: "bold" }}>{name}</Text>
 
-
-              <Text style={{ fontSize: 16 }}>Hi, {name}</Text>
+            <Text style={{ fontSize: 16 }}>Hi, {name}</Text>
           </View>
           <Box style={{ flex: 1, backgroundColor: 0 }}></Box>
 
@@ -90,229 +70,138 @@ const Profile = () => {
         }}
       >
         <View>
-          <Text style={{ fontSize: 18, fontWeight: "bold", paddingBottom: 10 }}>
-            My Account
-          </Text>
+          <Text style={styles.heading}>My Account</Text>
 
           <View style={{ width: "100%" }}>
             <Pressable
               onPress={() => {
                 navigation.navigate("Scheduled");
-                console.log("scheduled");
               }}
               flexDirection="row"
             >
-              <Text style={{ fontSize: 15, flex: 7 }}>Scheduled</Text>
+              <Text style={styles.text}>Scheduled</Text>
 
               <AntDesign
                 name="right"
                 size={15}
                 color="white"
-                style={{
-                  marginTop: 3,
-                  marginLeft: 10,
-                  flex: 1,
-                }}
+                style={styles.arrow}
               />
             </Pressable>
 
-            <View
-              style={{
-                height: 1,
-                backgroundColor: "gray",
-                marginTop: 15,
-                marginBottom: 15,
-              }}
-            />
+            <View style={styles.line} />
 
-            <Pressable
-              onPress={() => {
-                console.log("saved");
-              }}
-              flexDirection="row"
-            >
-              <Text style={{ fontSize: 15, flex: 7 }}>Saved Places</Text>
+            <Pressable flexDirection="row">
+              <Text style={styles.text}>Saved Places</Text>
 
               <AntDesign
                 name="right"
                 size={15}
                 color="white"
-                style={{
-                  marginTop: 3,
-                  marginLeft: 10,
-                  flex: 1,
-                }}
+                style={styles.arrow}
               />
             </Pressable>
 
-            <View
-              style={{
-                height: 1,
-                backgroundColor: "gray",
-                marginTop: 15,
-                marginBottom: 15,
-              }}
-            />
+            <View style={styles.line} />
 
-            <Pressable
-              onPress={() => {
-                console.log("emergency");
-                navigation.navigate("BookingSuccess")
-              }}
-              flexDirection="row"
-            >
-              <Text style={{ fontSize: 15, flex: 7 }}>Emergency Contacts</Text>
+            <Pressable flexDirection="row">
+              <Text style={styles.text}>Emergency Contacts</Text>
 
               <AntDesign
                 name="right"
                 size={15}
                 color="white"
-                style={{
-                  marginTop: 3,
-                  marginLeft: 10,
-                  flex: 1,
-                }}
+                style={styles.arrow}
               />
             </Pressable>
 
-            <View
-              style={{
-                height: 1,
-                backgroundColor: "gray",
-                marginTop: 15,
-                marginBottom: 15,
-              }}
-            />
+            <View style={styles.line} />
 
-            <Pressable
-              onPress={() => {
-                console.log("payment settings");
-              }}
-              flexDirection="row"
-            >
-              <Text style={{ fontSize: 15, flex: 7 }}>Payment Settings</Text>
+            <Pressable flexDirection="row">
+              <Text style={styles.text}>Payment Settings</Text>
               <AntDesign
                 name="right"
                 size={15}
                 color="white"
-                style={{
-                  marginTop: 3,
-                  marginLeft: 10,
-                  flex: 1,
-                }}
+                style={styles.arrow}
               />
             </Pressable>
 
-            <View
-              style={{
-                height: 1,
-                backgroundColor: "gray",
-                marginTop: 15,
-                marginBottom: 15,
-              }}
-            />
+            <View style={styles.line} />
           </View>
         </View>
 
         <View style={{ marginTop: 15 }}>
-          <Text style={{ fontSize: 18, fontWeight: "bold", paddingBottom: 10 }}>
-            General
-          </Text>
+          <Text style={styles.heading}>General</Text>
 
           <View style={{ width: "100%" }}>
-            <Pressable
-              onPress={() => {
-                console.log("halp");
-              }}
-              flexDirection="row"
-            >
-              <Text style={{ fontSize: 15, flex: 7 }}>Help Centre</Text>
+            <Pressable flexDirection="row">
+              <Text style={styles.text}>Help Centre</Text>
               <AntDesign
                 name="right"
                 size={15}
                 color="white"
-                style={{
-                  marginTop: 3,
-                  marginLeft: 10,
-                  flex: 1,
-                }}
+                style={styles.arrow}
               />
             </Pressable>
 
-            <View
-              style={{
-                height: 1,
-                backgroundColor: "gray",
-                marginTop: 15,
-                marginBottom: 15,
-              }}
-            />
+            <View style={styles.line} />
 
-            <Pressable
-              onPress={() => {
-                console.log("settings");
-              }}
-              flexDirection="row"
-            >
-              <Text style={{ fontSize: 15, flex: 7 }}>Settings</Text>
+            <Pressable flexDirection="row">
+              <Text style={styles.text}>Settings</Text>
 
               <AntDesign
                 name="right"
                 size={15}
                 color="white"
-                style={{
-                  marginTop: 3,
-                  marginLeft: 10,
-                  flex: 1,
-                }}
+                style={styles.arrow}
               />
             </Pressable>
 
-            <View
-              style={{
-                height: 1,
-                backgroundColor: "gray",
-                marginTop: 15,
-                marginBottom: 15,
-              }}
-            />
+            <View style={styles.line} />
 
-            <Pressable
-              onPress={() => {
-                console.log("feedback");
-              }}
-              flexDirection="row"
-            >
-              <Text style={{ fontSize: 15, flex: 7 }}>Feedback</Text>
+            <Pressable flexDirection="row">
+              <Text style={styles.text}>Feedback</Text>
 
               <AntDesign
                 name="right"
                 size={15}
                 color="white"
-                style={{
-                  marginTop: 3,
-                  marginLeft: 10,
-                  flex: 1,
-                }}
+                style={styles.arrow}
               />
             </Pressable>
 
-            <View
-              style={{
-                height: 1,
-                backgroundColor: "gray",
-                marginTop: 15,
-                marginBottom: 15,
-              }}
-            />
+            <View style={styles.line} />
           </View>
         </View>
       </Box>
 
-      {/* white space if i don't add this box in ??? */}
       <Box style={{ height: 300 }}></Box>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  line: {
+    height: 1,
+    backgroundColor: "gray",
+    marginTop: 15,
+    marginBottom: 15,
+  },
+
+  arrow: {
+    marginTop: 3,
+    marginLeft: 10,
+    flex: 1,
+  },
+
+  text: { fontSize: 15, flex: 7 },
+
+  heading: {
+    fontSize: 18,
+    fontWeight: "bold",
+    paddingBottom: 10,
+  },
+});
 
 export default Profile;
