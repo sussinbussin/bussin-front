@@ -1,13 +1,4 @@
-import {
-  Heading,
-  View,
-  Box,
-  Input,
-  VStack,
-  FlatList,
-  Text,
-  Pressable,
-} from "native-base";
+import { Box, Input, FlatList, Text, Pressable } from "native-base";
 import { useEffect, useState, useContext } from "react";
 import { StyleSheet, Keyboard } from "react-native";
 import { usePlacesAPI } from "../api/PlacesAPI.js";
@@ -32,7 +23,6 @@ const LocationSearch = () => {
   const [keyboardStatus, setKeyboardStatus] = useState(false);
   const [search, setSearch] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-  const [destination, setDestination] = useState();
   const { findPlaces } = usePlacesAPI(search);
   const debouncedLocation = useDebounce(search, 300);
 
@@ -122,7 +112,6 @@ const LocationSearch = () => {
 
     Keyboard.dismiss();
     setSuggestions("");
-
 
     dispatch({ type: "MODIFY_STAGE", payload: payload });
   };

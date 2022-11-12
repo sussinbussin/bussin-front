@@ -14,10 +14,8 @@ const useBookedRideApi = (token) => {
     try {
       const res = await api.get(`ride/${rideId}`);
       data = await res.json();
-      console.log(data);
       return data;
     } catch (error) {
-      console.log(error);
       return;
     }
   };

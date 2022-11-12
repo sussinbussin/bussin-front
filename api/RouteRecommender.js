@@ -9,7 +9,6 @@ const useRecommenderAPI = (token) => {
     },
   });
   const recommend = async (coords) => {
-    console.log(coords);
     let data = null;
     try {
       const res = await api.post("routes", {
@@ -18,14 +17,11 @@ const useRecommenderAPI = (token) => {
           "Origin Longitude": coords.originLng,
           "Destination Latitude": coords.destLat,
           "Destination Longitude": coords.destLng,
-          //"Departure Time": coords.time,
         },
       });
       data = await res.json();
-      console.log(data);
       return data;
     } catch (error) {
-      console.log(error);
       return;
     }
   };

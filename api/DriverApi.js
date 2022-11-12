@@ -13,10 +13,8 @@ const useDriverApi = (token) => {
     try {
       const res = await api.get(`driver/${carPlate}`);
       result = await res.json();
-      console.log(result);
       return result;
     } catch (error) {
-      console.error(error);
     }
   };
 

@@ -41,7 +41,6 @@ const RegisterDetails = ({ navigation }) => {
   };
 
   const handleNext = async () => {
-    //TODO: implement check
 
     const formData = {
       nric: nric,
@@ -50,7 +49,6 @@ const RegisterDetails = ({ navigation }) => {
     };
 
     const result = await check(formData);
-    console.log(result);
     let error = false;
 
     if (!result.nricUnique) {

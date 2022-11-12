@@ -89,7 +89,6 @@ const PickupSearch = () => {
   const handleBook = async () => {
     setLoading(true);
 
-    console.log(state.token);
     const { recommend } = useRecommenderAPI(state.token);
 
     const result = await recommend({
@@ -97,11 +96,7 @@ const PickupSearch = () => {
       originLng: state.pickup.geo.lng,
       destLat: state.dest.geo.lat,
       destLng: state.dest.geo.lng,
-      //time: "2022/10/06 07:30:00",
     });
-
-    console.log("recommend");
-    console.log(result);
 
     if (!result) return;
     let routes = result["Recommended Driver Routes"];
@@ -117,19 +112,8 @@ const PickupSearch = () => {
         display: "recommend",
       },
     });
-    //const result = await recommend({
-    //  originLat: 1.2977,
-    //  originLng: 103.84912,
-    //  destLat: 1.44917,
-    //  destLng: 103.8199,
-    //  time: "2022/10/06 07:30:00",
-    //});
   };
 
-  /**
-   * TODO: Add Datetime and passenger amt
-   * TODO: make it such that pickup and drop off cant be the same
-   */
   return (
     <Box style={{ ...styles.box, marginTop: keyboardStatus ? 0 : "auto" }}>
       <VStack>

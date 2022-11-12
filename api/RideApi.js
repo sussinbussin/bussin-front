@@ -19,7 +19,6 @@ const useRideApi = (token) => {
       result = await res.json();
       return result;
     } catch (error) {
-      console.error(error);
       return result;
     }
   };
@@ -30,7 +29,6 @@ const useRideApi = (token) => {
       const res = await api.get(`ride/${id}`);
       data = await res.json();
     } catch (error) {
-      console.log(error);
       return data;
     }
   };

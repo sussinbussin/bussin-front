@@ -62,10 +62,10 @@ const Login = ({ navigation }) => {
           },
         },
       });
-    dispatch({
-      type: "SET_TOKEN",
-      payload: token,
-    });
+      dispatch({
+        type: "SET_TOKEN",
+        payload: token,
+      });
       navigation.navigate("Home");
     })();
   }, []);
@@ -80,7 +80,6 @@ const Login = ({ navigation }) => {
     }
 
     let { token, email } = await loginUser();
-    console.log(token);
     if (!token) {
       setPassword("");
       setUsername("");

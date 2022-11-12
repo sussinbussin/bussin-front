@@ -3,6 +3,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
 
+/**
+ * The bar on top of the application, together with the back bar
+ */
 const TopBarBack = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();

@@ -16,7 +16,6 @@ const useRegisterApi = () => {
       result = await res.json();
       return result;
     } catch (error) {
-      console.log(error);
       return result;
     }
   };
@@ -30,7 +29,6 @@ const useRegisterApi = () => {
       result = await res.json();
       return result;
     } catch (error) {
-      console.error(error);
       return result;
     }
   };
