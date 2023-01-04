@@ -13,6 +13,7 @@ const useTrackApi = () => {
       data = await res.json();
       return data;
     } catch (error) {
+      //console.log(error);
       return error;
     }
   };
@@ -24,6 +25,7 @@ const useTrackApi = () => {
       data = await res.json();
       return data;
     } catch (error) {
+      //console.log(error);
       return error;
     }
   };

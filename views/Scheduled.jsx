@@ -44,7 +44,9 @@ const getScheduledRides = async (setData, state) => {
     // get details of each ride
     const to = await usePlacesAPI(ride.rideTo).getDetails();
     const from = await usePlacesAPI(ride.rideFrom).getDetails();
-    // timezone
+    if (to == undefined) break;
+    if (from == undefined) break;
+    //timezone
     date = date.add(8, "hour");
     rides.push({
       id: ride.id,
@@ -57,8 +59,8 @@ const getScheduledRides = async (setData, state) => {
       status: status,
     });
   }
-
   setData(rides.sort(compare));
+  console.log(rides.sort(compare));
 };
 
 const Scheduled = () => {
@@ -67,7 +69,9 @@ const Scheduled = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    getScheduledRides(setData, state);
+    (async () => {
+      await getScheduledRides(setData, state);
+    })();
   }, []);
 
   const renderItem = ({ item }) => (

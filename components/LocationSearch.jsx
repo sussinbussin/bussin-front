@@ -43,6 +43,7 @@ const LocationSearch = () => {
   useEffect(() => {
     const getPlaces = async () => {
       const results = await findPlaces();
+      console.log(results);
       setSuggestions(results.predictions);
     };
 
